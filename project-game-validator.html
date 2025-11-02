@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Traffic Puzzle Validation Engine | Grigol Peradze Portfolio">
+    <title>Real-Time Traffic Puzzle Validation - Grigol Peradze</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-detail-hero {
+            background: linear-gradient(135deg, #00D4AA 0%, #00A67E 100%);
+            color: white;
+            padding: 6rem 0 4rem;
+            margin-top: 70px;
+        }
+        .project-nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+        }
+        .project-nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .project-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .project-nav-links a:hover {
+            color: var(--primary-color);
+        }
+        .back-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover {
+            color: white;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .metric-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00D4AA;
+        }
+        .metric-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        .tech-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">Grigol Peradze</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="project-detail-hero">
+        <div class="container">
+            <a href="index.html#projects" class="back-link">← Back to Projects</a>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Real-Time Traffic Puzzle Validation Engine</h1>
+            <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
+                High-performance solvability validation achieving 1000x speedup through novel iterative removal algorithm,
+                processing 100,000+ production validations
+            </p>
+            <div class="tech-stack">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Graph Theory</span>
+                <span class="tech-badge">AWS Lambda</span>
+                <span class="tech-badge">State-Space Search</span>
+                <span class="tech-badge">Pathfinding</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="project-nav">
+        <div class="container">
+            <ul class="project-nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#technical">Technical Details</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" style="padding: 4rem 2rem;">
+        <section id="overview" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Executive Summary</h2>
+            <p class="lead">
+                Developed a high-performance solvability validation engine for mobile game level design, enabling real-time
+                validation during the design process through a novel iterative removal algorithm.
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">1000x</div>
+                    <div class="metric-label">Algorithm Speedup</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;10ms</div>
+                    <div class="metric-label">Validation Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">100K+</div>
+                    <div class="metric-label">Production Validations</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">96-98%</div>
+                    <div class="metric-label">Time Reduction</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">O(V²)</div>
+                    <div class="metric-label">vs O(V!) BFS</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">Production Incidents</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem" style="margin-bottom: 4rem;">
+            <h2 class="section-title">The Challenge</h2>
+            <p class="lead">
+                Mobile traffic puzzle games require designers to create solvable levels with specific difficulty ratings.
+                Manual testing was taking 1-2 hours per complex level.
+            </p>
+            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Problem Complexity</h3>
+            <ul style="margin-left: 2rem; line-height: 2;">
+                <li><strong>State space explosion:</strong> Traditional BFS approach O(V!) for V vehicles</li>
+                <li><strong>Real-time requirement:</strong> Designers need instant feedback during level creation</li>
+                <li><strong>Edge cases:</strong> Must detect impossible configurations early</li>
+                <li><strong>No ML data:</strong> Limited training examples, rule-based approach required</li>
+            </ul>
+        </section>
+
+        <section id="solution" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Novel Algorithm Approach</h2>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Iterative Removal Strategy</h3>
+            <p>Instead of searching all possible moves, identify and remove vehicles that can exit in current state:</p>
+            <div class="code-block">
+<span style="color: #608b4e;"># Novel O(V²) iterative removal algorithm</span>
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">validate_puzzle</span>(board, vehicles):
+    removable = <span style="color: #569cd6;">True</span>
+    <span style="color: #c586c0;">while</span> removable:
+        removable = <span style="color: #569cd6;">False</span>
+        <span style="color: #c586c0;">for</span> vehicle <span style="color: #c586c0;">in</span> vehicles:
+            <span style="color: #c586c0;">if</span> can_exit(vehicle, board):
+                remove_vehicle(vehicle, board)
+                vehicles.remove(vehicle)
+                removable = <span style="color: #569cd6;">True</span>
+                <span style="color: #c586c0;">break</span>
+
+    <span style="color: #c586c0;">return</span> <span style="color: #dcdcaa;">len</span>(vehicles) == <span style="color: #b5cea8;">0</span>  <span style="color: #608b4e;"># All vehicles removed = solvable</span>
+
+<span style="color: #608b4e;"># Complexity: O(V²) iterations vs O(V!) state exploration</span>
+            </div>
+        </section>
+
+        <section id="results" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Results & Impact</h2>
+            <div style="overflow-x: auto; margin-top: 2rem;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Metric</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Level Creation Time</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>1-2 hours → 5-10 minutes</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Algorithm Speedup</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>1000x faster than BFS</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Production Validations</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>100,000+</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Deployment</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>AWS Lambda</strong> (serverless)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;">Production Incidents</td>
+                            <td style="padding: 1rem;"><strong>Zero</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section style="background: var(--bg-secondary); padding: 3rem; border-radius: var(--radius-lg); text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Need Algorithm Optimization?</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                Let's discuss how I can solve complex computational problems for your product
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+                <a href="index.html#projects" class="btn btn-secondary">View More Projects</a>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Grigol Peradze. AWS-Certified ML Engineer | Ph.D. Physics | Expert-Vetted Upwork Freelancer</p>
+            <div class="footer-links">
+                <a href="https://github.com/grigolp" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/grigol-peradze" target="_blank">LinkedIn</a>
+                <a href="https://www.upwork.com/freelancers/~01a437b559a9732e0c" target="_blank">Upwork</a>
+                <a href="mailto:gr.peradze@gmail.com">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

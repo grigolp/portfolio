@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Warehouse Rack Movement Algorithm | Grigol Peradze Portfolio">
+    <title>Warehouse Pathfinding Algorithm - Grigol Peradze</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-detail-hero {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            padding: 6rem 0 4rem;
+            margin-top: 70px;
+        }
+        .project-nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+        }
+        .project-nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .project-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .project-nav-links a:hover {
+            color: var(--primary-color);
+        }
+        .back-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover {
+            color: white;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .metric-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4A90E2;
+        }
+        .metric-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        .tech-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">Grigol Peradze</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="project-detail-hero">
+        <div class="container">
+            <a href="index.html#projects" class="back-link">← Back to Projects</a>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Warehouse Rack Movement Algorithm</h1>
+            <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
+                Production-deployed IDA* pathfinding algorithm for Kasparium's warehouse automation,
+                coordinating 10+ parallel rack movements with zero deadlocks
+            </p>
+            <div class="tech-stack">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">FastAPI</span>
+                <span class="tech-badge">IDA* Algorithm</span>
+                <span class="tech-badge">NumPy</span>
+                <span class="tech-badge">Pydantic</span>
+                <span class="tech-badge">Graph Theory</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="project-nav">
+        <div class="container">
+            <ul class="project-nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#technical">Technical Details</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" style="padding: 4rem 2rem;">
+        <section id="overview" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Executive Summary</h2>
+            <p class="lead">
+                Developed a sophisticated IDA* pathfinding algorithm for Kasparium's innovative warehouse automation system
+                that moves storage racks to workers (inverting the traditional warehouse model).
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">Production</div>
+                    <div class="metric-label">Currently Deployed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;500ms</div>
+                    <div class="metric-label">Calculation Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">50×50</div>
+                    <div class="metric-label">Grid Scalability</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">10+</div>
+                    <div class="metric-label">Simultaneous Orders</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">Deadlocks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">6 months</div>
+                    <div class="metric-label">Development Time</div>
+                </div>
+            </div>
+            <p style="margin-top: 2rem;">
+                <strong>Client:</strong> <a href="https://kasparium.com" target="_blank">Kasparium</a> (Warehouse Automation) |
+                <strong>Status:</strong> Active production use
+            </p>
+        </section>
+
+        <section id="problem" style="margin-bottom: 4rem;">
+            <h2 class="section-title">The Challenge</h2>
+            <p class="lead">
+                Kasparium developed an innovative warehouse where storage racks move to workers, rather than workers walking
+                to racks. The core challenge: coordinate parallel rack movements without collisions.
+            </p>
+            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Technical Complexity</h3>
+            <ul style="margin-left: 2rem; line-height: 2;">
+                <li><strong>Multi-agent pathfinding:</strong> 10+ orders moving simultaneously</li>
+                <li><strong>Priority management:</strong> High-priority orders must complete first</li>
+                <li><strong>Limited empty spaces:</strong> Efficient use of floor space required</li>
+                <li><strong>Station traffic control:</strong> Limit concurrent deliveries per station</li>
+                <li><strong>Deadlock prevention:</strong> Circular dependencies must be avoided</li>
+                <li><strong>Real-time performance:</strong> Sub-second response for next-move decisions</li>
+            </ul>
+        </section>
+
+        <section id="solution" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Solution</h2>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">IDA* Pathfinding with Custom Heuristics</h3>
+            <p>Implemented Iterative Deepening A* for memory-efficient pathfinding with custom cost functions:</p>
+            <div class="code-block">
+<span style="color: #608b4e;"># Multi-component cost heuristic</span>
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">calculate_cost</span>(order, station, empties):
+    <span style="color: #608b4e;"># Primary: Distance to target station</span>
+    cost_target = order.distance(station)
+
+    <span style="color: #608b4e;"># Secondary: Proximity to empty tiles (enables future moves)</span>
+    cost_empty = <span style="color: #dcdcaa;">avg</span>([order.distance(e) <span style="color: #c586c0;">for</span> e <span style="color: #c586c0;">in</span> empties]) / <span style="color: #b5cea8;">5</span>
+
+    <span style="color: #608b4e;"># Tertiary: Position empties near stations for return paths</span>
+    cost_empty_station = <span style="color: #dcdcaa;">avg</span>([station.distance(e) <span style="color: #c586c0;">for</span> e <span style="color: #c586c0;">in</span> empties]) / <span style="color: #b5cea8;">10</span>
+
+    <span style="color: #c586c0;">return</span> cost_target + cost_empty + cost_empty_station
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Deadlock Prevention System</h3>
+            <div class="code-block">
+<span style="color: #608b4e;"># Multi-layered conflict resolution</span>
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">allow_swap</span>(<span style="color: #569cd6;">self</span>, swap, performed_swaps, other_orders):
+    <span style="color: #608b4e;"># Layer 1: Check conflict with already-performed swaps</span>
+    changed = <span style="color: #dcdcaa;">set</span>(swap).intersection(<span style="color: #dcdcaa;">sum</span>(performed_swaps, ()))
+    <span style="color: #c586c0;">if</span> changed:
+        <span style="color: #c586c0;">return</span> <span style="color: #569cd6;">None</span>  <span style="color: #608b4e;"># Defer to next step</span>
+
+    <span style="color: #608b4e;"># Layer 2: Don't move higher-priority orders</span>
+    swapping_higher_priority = <span style="color: #dcdcaa;">any</span>(
+        order.priority < <span style="color: #569cd6;">self</span>.priority <span style="color: #c586c0;">and</span> order.rack_idx <span style="color: #c586c0;">in</span> swap
+        <span style="color: #c586c0;">for</span> order <span style="color: #c586c0;">in</span> other_orders
+    )
+    <span style="color: #c586c0;">if</span> swapping_higher_priority:
+        <span style="color: #c586c0;">return</span> <span style="color: #569cd6;">None</span>
+
+    <span style="color: #608b4e;"># Layer 3: Respect station-blocked empty tiles</span>
+    <span style="color: #c586c0;">if</span> <span style="color: #dcdcaa;">set</span>(swap).intersection(station_blocked_empties):
+        <span style="color: #c586c0;">return</span> <span style="color: #569cd6;">None</span>
+
+    <span style="color: #c586c0;">return</span> swap  <span style="color: #608b4e;"># Safe to execute</span>
+            </div>
+        </section>
+
+        <section id="results" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Results & Impact</h2>
+            <div style="overflow-x: auto; margin-top: 2rem;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Metric</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Deployment Status</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>Production at Kasparium</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Calculation Time</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;500ms</strong> for 10 orders on 30×30 floor</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Scalability</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>50×50 tiles</strong> (2,500 positions)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Concurrent Orders</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>10+ simultaneous</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Deadlocks</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>Zero</strong> in thousands of simulations</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;">Path Optimality</td>
+                            <td style="padding: 1rem;"><strong>100%</strong> - IDA* guarantees shortest path</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Business Value</h3>
+                <ul style="margin-left: 2rem; line-height: 2;">
+                    <li>Enables Kasparium's unique warehouse automation model</li>
+                    <li>Coordinates complex multi-order movements impossible to manage manually</li>
+                    <li>Provides predictable, deterministic behavior for operational planning</li>
+                    <li>Statistical simulation enables floor plan optimization before construction</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="technical" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Highlights</h2>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Distance Pre-Calculation Optimization</h3>
+            <p>Pre-calculated all tile-to-tile distances for O(1) lookups during pathfinding:</p>
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); margin: 1rem 0;">
+                <p><strong>Time Complexity:</strong> O(n²) one-time calculation</p>
+                <p><strong>Space Complexity:</strong> O(n²) storage (~2MB for 50×50 floor)</p>
+                <p><strong>Impact:</strong> 200x speedup (10s → 50ms per pathfinding)</p>
+            </div>
+        </section>
+
+        <section style="background: var(--bg-secondary); padding: 3rem; border-radius: var(--radius-lg); text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Need Advanced Algorithms?</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                Let's discuss how I can solve complex pathfinding and optimization challenges
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+                <a href="index.html#projects" class="btn btn-secondary">View More Projects</a>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Grigol Peradze. AWS-Certified ML Engineer | Ph.D. Physics | Expert-Vetted Upwork Freelancer</p>
+            <div class="footer-links">
+                <a href="https://github.com/grigolp" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/grigol-peradze" target="_blank">LinkedIn</a>
+                <a href="https://www.upwork.com/freelancers/~01a437b559a9732e0c" target="_blank">Upwork</a>
+                <a href="mailto:gr.peradze@gmail.com">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

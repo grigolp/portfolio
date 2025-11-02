@@ -718,3 +718,134 @@ body {
 
 .text-center { text-align: center; }
 .text-muted { color: var(--text-muted); }
+
+/* ========================================
+   Upwork Highlight Section
+   ======================================== */
+
+.upwork-section {
+    background: linear-gradient(135deg, #14A800 0%, #0d7300 100%);
+    color: white;
+    padding: var(--spacing-lg) 0;
+}
+
+.upwork-highlight {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.upwork-content {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.upwork-badge {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.2);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+}
+
+.upwork-text {
+    flex: 1;
+}
+
+.upwork-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.upwork-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-md);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.upwork-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.upwork-stat {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+}
+
+.upwork-stat .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.upwork-stat .stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: var(--spacing-xs);
+}
+
+.btn-upwork {
+    display: inline-block;
+    background: white;
+    color: #14A800;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-upwork:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: #f0f0f0;
+}
+
+.upwork-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image-placeholder {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.placeholder-text {
+    margin-top: var(--spacing-sm);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .upwork-highlight {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .upwork-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .upwork-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .upwork-title {
+        font-size: 2rem;
+    }
+}

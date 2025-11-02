@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enterprise ML Pipeline with AWS Batch | Grigol Peradze Portfolio">
+    <title>AWS Batch ML Pipeline - Grigol Peradze</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-detail-hero {
+            background: linear-gradient(135deg, #FF9900 0%, #FF6B00 100%);
+            color: white;
+            padding: 6rem 0 4rem;
+            margin-top: 70px;
+        }
+        .project-nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+        }
+        .project-nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .project-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .project-nav-links a:hover {
+            color: var(--primary-color);
+        }
+        .back-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover {
+            color: white;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .metric-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FF9900;
+        }
+        .metric-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        .tech-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .architecture-diagram {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">Grigol Peradze</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="project-detail-hero">
+        <div class="container">
+            <a href="index.html#projects" class="back-link">← Back to Projects</a>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Enterprise ML Pipeline with AWS Batch</h1>
+            <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
+                Production-ready multi-horizon sales forecasting pipeline achieving 15x training speedup through
+                AWS Batch parallelization and 70% cost reduction using spot instances
+            </p>
+            <div class="tech-stack">
+                <span class="tech-badge">AWS Batch</span>
+                <span class="tech-badge">XGBoost</span>
+                <span class="tech-badge">Docker</span>
+                <span class="tech-badge">S3</span>
+                <span class="tech-badge">CloudWatch</span>
+                <span class="tech-badge">Pydantic</span>
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Scikit-learn</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Navigation -->
+    <div class="project-nav">
+        <div class="container">
+            <ul class="project-nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#technical">Technical Details</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container" style="padding: 4rem 2rem;">
+
+        <!-- Overview -->
+        <section id="overview" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Executive Summary</h2>
+            <p class="lead">
+                Designed and deployed a production-ready machine learning pipeline for multi-horizon sales forecasting,
+                leveraging AWS Batch for parallel model training across 18 forecast horizons.
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">15x</div>
+                    <div class="metric-label">Training Speedup</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">70%</div>
+                    <div class="metric-label">Cost Reduction</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">48h</div>
+                    <div class="metric-label">Full Training Cycle</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">18</div>
+                    <div class="metric-label">Parallel Models</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$0.22</div>
+                    <div class="metric-label">Inference Cost</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">825+</div>
+                    <div class="metric-label">Engineered Features</div>
+                </div>
+            </div>
+            <p style="margin-top: 2rem;">
+                <strong>Impact:</strong> Transformed a 30-day sequential training process into a 48-hour parallel operation
+                while reducing infrastructure costs from ~$750/cycle to ~$225/cycle using AWS Batch spot instances.
+            </p>
+        </section>
+
+        <!-- Problem Statement -->
+        <section id="problem" style="margin-bottom: 4rem;">
+            <h2 class="section-title">The Challenge</h2>
+            <p class="lead">
+                Time-series forecasting for retail sales requires predictions across multiple future time periods (1-18 months ahead),
+                with each horizon requiring independent model training.
+            </p>
+
+            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Business Constraints</h3>
+            <ul style="margin-left: 2rem; line-height: 2; margin-top: 1rem;">
+                <li><strong>Sequential training:</strong> 30 days per full model refresh (18 models × ~40 hours each)</li>
+                <li><strong>Zero-inflated data:</strong> Many zero sales periods requiring specialized handling</li>
+                <li><strong>Large datasets:</strong> ~3GB of training data with 825+ engineered features</li>
+                <li><strong>Frequent retraining:</strong> Models need updates as new data arrives monthly</li>
+                <li><strong>Cost sensitivity:</strong> Must balance compute speed vs infrastructure costs</li>
+            </ul>
+
+            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Technical Requirements</h3>
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); margin-top: 1rem;">
+                <ul style="list-style: none; padding: 0;">
+                    <li>✓ <strong>Scalability:</strong> Train 18 independent models in parallel</li>
+                    <li>✓ <strong>Automation:</strong> End-to-end deployment without manual intervention</li>
+                    <li>✓ <strong>Reliability:</strong> Graceful error handling, comprehensive logging</li>
+                    <li>✓ <strong>Cost Efficiency:</strong> Optimize for AWS compute costs</li>
+                    <li>✓ <strong>Maintainability:</strong> Clean architecture, configuration-driven design</li>
+                    <li>✓ <strong>Reproducibility:</strong> Version-controlled configs and containerization</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Solution Architecture -->
+        <section id="solution" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Solution</h2>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Two-Stage Prediction System</h3>
+            <p>
+                Implemented a classifier + regressor architecture to handle zero-inflated sales data:
+            </p>
+
+            <div class="architecture-diagram">
+                <h4 style="margin-bottom: 1rem;">Pipeline Architecture</h4>
+                <pre style="font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; margin: 0;">
+┌─────────────────────────┐
+│   Developer Machine     │
+│  submit_batch_training  │
+└───────────┬─────────────┘
+            │ Uploads configs to S3
+            │ Submits AWS Batch Job
+            ▼
+┌───────────────────────────────────────┐
+│         AWS Batch Array Job           │
+│  ┌────────┐  ┌────────┐  ┌────────┐  │
+│  │  Tm1   │  │  Tm2   │  │ Tm18   │  │ ← 18 parallel tasks
+│  └────────┘  └────────┘  └────────┘  │
+│   (c6i.4xlarge: 16 vCPU, 32GB RAM)   │
+└───────────────┬───────────────────────┘
+                │
+                ├─ Downloads data from S3 (~3GB)
+                ├─ Trains XGBoost models:
+                │    • Stage 1: Classifier (zero/non-zero)
+                │    • Stage 2: Regressor (sales amount)
+                ├─ Bayesian hyperparameter optimization (50 iter)
+                ├─ Generates HTML evaluation reports
+                └─ Uploads artifacts to S3
+                ▼
+┌─────────────────────────────────────┐
+│  S3: Model Artifacts Repository     │
+│  - Models (18 horizons × 2 stages)  │
+│  - HTML Reports & Metrics           │
+│  - Configuration Snapshots          │
+│  - Prediction CSVs                  │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│    CloudWatch Logs & Monitoring     │
+│  - Real-time job progress           │
+│  - Error tracking & alerts          │
+│  - Cost tracking per job            │
+└─────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Key Design Decisions</h3>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. AWS Batch Array Jobs</h4>
+                <p><strong>Rationale:</strong> Native parallel processing without manual orchestration</p>
+                <p><strong>Implementation:</strong> 1 parent job spawns 18 child tasks, each training 1 horizon</p>
+                <p><strong>Impact:</strong> 30 days → 48 hours (limited by longest-running task)</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">2. Spot Instance Strategy</h4>
+                <p><strong>Rationale:</strong> 60-70% cost savings for interruptible workloads</p>
+                <p><strong>Strategy:</strong> Checkpoint model training every 10 iterations, resume on interruption</p>
+                <p><strong>Impact:</strong> ~$750/cycle → ~$225/cycle (with <5% interruption rate)</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Docker Containerization</h4>
+                <p><strong>Rationale:</strong> Reproducible environments across dev/production</p>
+                <p><strong>Optimization:</strong> Base image <code>mambaorg/micromamba:1.5</code> for 60% faster dependency resolution</p>
+                <p><strong>Impact:</strong> 1.8GB final image with all ML dependencies, cached for instant deployment</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">4. Pydantic Configuration Validation</h4>
+                <p><strong>Rationale:</strong> Type-safe configs prevent runtime errors in production</p>
+                <p><strong>Implementation:</strong> All YAML configs validated against Pydantic schemas</p>
+                <p><strong>Impact:</strong> Zero config-related failures in 50+ production runs</p>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Modular Architecture</h3>
+            <div class="code-block">
+<span style="color: #608b4e;"># Core modules (src/ directory)</span>
+src/
+├── config_schema.py       <span style="color: #608b4e;"># Pydantic validation for type safety</span>
+├── data_loader.py         <span style="color: #608b4e;"># S3/local abstraction with retry logic</span>
+├── model_trainer.py       <span style="color: #608b4e;"># XGBoost training + Bayesian optimization</span>
+├── evaluator.py           <span style="color: #608b4e;"># Metrics collection (classification + regression)</span>
+├── visualizer.py          <span style="color: #608b4e;"># HTML report generation (8+ plot types)</span>
+├── io_utils.py            <span style="color: #608b4e;"># S3 operations with exponential backoff</span>
+└── logger.py              <span style="color: #608b4e;"># Dual logging (console + CloudWatch)</span>
+
+<span style="color: #608b4e;"># Entry points</span>
+training.py                <span style="color: #608b4e;"># Local single-horizon training</span>
+inference.py               <span style="color: #608b4e;"># Multi-horizon prediction pipeline</span>
+batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestration layer</span>
+            </div>
+        </section>
+
+        <!-- Results & Impact -->
+        <section id="results" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Results & Business Impact</h2>
+
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Performance Metrics</h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Metric</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Before</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">After</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Improvement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Time</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">30 days</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>48 hours</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">15x faster</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Cost/Cycle</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~$750</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>~$225</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">70% reduction</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Inference Cost</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">N/A (local)</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>$0.22</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Per 18-horizon run</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Deployment Time</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~1 hour (manual)</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>5 minutes</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Automated</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Config Errors</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~10% of runs</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>0%</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Pydantic validation</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;">Manual Intervention</td>
+                            <td style="padding: 1rem;">Required</td>
+                            <td style="padding: 1rem;"><strong>None</strong></td>
+                            <td style="padding: 1rem;">Fully automated</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1rem;">Business Value Delivered</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Faster Iteration</h4>
+                    <p>Monthly retraining now feasible (vs quarterly)</p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Cost Predictability</h4>
+                    <p>Linear scaling with data volume</p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Zero Downtime</h4>
+                    <p>Spot interruptions handled gracefully</p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Production Ready</h4>
+                    <p>Comprehensive monitoring and logging</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Deep Dive -->
+        <section id="technical" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Deep Dive</h2>
+
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Two-Stage Model Architecture</h3>
+            <p>Handling zero-inflated sales data requires specialized approach:</p>
+
+            <div class="code-block" style="margin-top: 1rem;">
+<span style="color: #608b4e;"># Stage 1: Binary Classifier (Will there be sales?)</span>
+classifier = XGBClassifier(
+    objective=<span style="color: #ce9178;">'binary:logistic'</span>,
+    scale_pos_weight=<span style="color: #b5cea8;">calculate_class_weight</span>(),  <span style="color: #608b4e;"># Handle imbalance</span>
+    max_depth=<span style="color: #b5cea8;">8</span>,
+    learning_rate=<span style="color: #b5cea8;">0.05</span>,
+    n_estimators=<span style="color: #b5cea8;">500</span>
+)
+
+<span style="color: #608b4e;"># Stage 2: Regressor (How much sales?) - trained only on non-zero examples</span>
+regressor = XGBRegressor(
+    objective=<span style="color: #ce9178;">'reg:squarederror'</span>,
+    max_depth=<span style="color: #b5cea8;">10</span>,
+    learning_rate=<span style="color: #b5cea8;">0.03</span>,
+    n_estimators=<span style="color: #b5cea8;">800</span>
+)
+
+<span style="color: #608b4e;"># Bayesian hyperparameter optimization using Optuna</span>
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">objective</span>(trial):
+    params = {
+        <span style="color: #ce9178;">'max_depth'</span>: trial.suggest_int(<span style="color: #ce9178;">'max_depth'</span>, <span style="color: #b5cea8;">3</span>, <span style="color: #b5cea8;">12</span>),
+        <span style="color: #ce9178;">'learning_rate'</span>: trial.suggest_float(<span style="color: #ce9178;">'learning_rate'</span>, <span style="color: #b5cea8;">0.01</span>, <span style="color: #b5cea8;">0.3</span>),
+        <span style="color: #ce9178;">'subsample'</span>: trial.suggest_float(<span style="color: #ce9178;">'subsample'</span>, <span style="color: #b5cea8;">0.6</span>, <span style="color: #b5cea8;">1.0</span>),
+    }
+    <span style="color: #c586c0;">return</span> cv_score(params)
+
+study = optuna.create_study(direction=<span style="color: #ce9178;">'maximize'</span>)
+study.optimize(objective, n_trials=<span style="color: #b5cea8;">50</span>)
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 3rem 0 1rem;">S3 Retry Logic with Exponential Backoff</h3>
+            <div class="code-block">
+<span style="color: #608b4e;"># Robust S3 operations with retry</span>
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">upload_with_retry</span>(local_path, s3_path, max_retries=<span style="color: #b5cea8;">5</span>):
+    <span style="color: #c586c0;">for</span> attempt <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(max_retries):
+        <span style="color: #c586c0;">try</span>:
+            s3_client.upload_file(local_path, bucket, s3_path)
+            logger.info(<span style="color: #ce9178;">f"Uploaded {s3_path}"</span>)
+            <span style="color: #c586c0;">return</span> <span style="color: #569cd6;">True</span>
+        <span style="color: #c586c0;">except</span> ClientError <span style="color: #c586c0;">as</span> e:
+            wait_time = <span style="color: #b5cea8;">2</span> ** attempt  <span style="color: #608b4e;"># Exponential backoff</span>
+            logger.warning(<span style="color: #ce9178;">f"Upload failed, retry {attempt+1}/{max_retries} in {wait_time}s"</span>)
+            time.sleep(wait_time)
+    <span style="color: #c586c0;">raise</span> RuntimeError(<span style="color: #ce9178;">f"Failed to upload {s3_path} after {max_retries} attempts"</span>)
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 3rem 0 1rem;">Skills Demonstrated</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="color: #FF9900; margin-bottom: 1rem;">Cloud Architecture</h4>
+                    <ul style="line-height: 1.8;">
+                        <li>AWS Batch array job orchestration</li>
+                        <li>S3 lifecycle management</li>
+                        <li>CloudWatch monitoring integration</li>
+                        <li>Spot instance cost optimization</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #FF9900; margin-bottom: 1rem;">MLOps</h4>
+                    <ul style="line-height: 1.8;">
+                        <li>Docker containerization</li>
+                        <li>Configuration-driven pipelines</li>
+                        <li>Automated model versioning</li>
+                        <li>Comprehensive evaluation reporting</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #FF9900; margin-bottom: 1rem;">Machine Learning</h4>
+                    <ul style="line-height: 1.8;">
+                        <li>XGBoost for time-series</li>
+                        <li>Bayesian hyperparameter tuning</li>
+                        <li>Zero-inflated data handling</li>
+                        <li>Feature engineering (825+ features)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section style="background: var(--bg-secondary); padding: 3rem; border-radius: var(--radius-lg); text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Need ML Infrastructure That Scales?</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                Let's discuss how I can architect production ML pipelines for your business
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+                <a href="index.html#projects" class="btn btn-secondary">View More Projects</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Grigol Peradze. AWS-Certified ML Engineer | Ph.D. Physics | Expert-Vetted Upwork Freelancer</p>
+            <div class="footer-links">
+                <a href="https://github.com/grigolp" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/grigol-peradze" target="_blank">LinkedIn</a>
+                <a href="https://www.upwork.com/freelancers/~01a437b559a9732e0c" target="_blank">Upwork</a>
+                <a href="mailto:gr.peradze@gmail.com">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
