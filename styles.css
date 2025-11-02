@@ -296,30 +296,42 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: var(--spacing-lg);
-    align-items: start;
+    align-items: stretch;
+}
+
+.about-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .about-text p {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
     color: var(--text-secondary);
+    line-height: 1.8;
 }
 
 .about-stats {
     display: grid;
-    gap: var(--spacing-sm);
+    gap: 0.5rem;
 }
 
 .stat-card {
     background-color: var(--bg-primary);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
     text-align: center;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 70px;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
 }
 
@@ -327,6 +339,8 @@ body {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--primary-color);
+    margin: 0;
+    line-height: 1;
 }
 
 .stat-label {
@@ -334,6 +348,9 @@ body {
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 0.35rem;
+    margin-bottom: 0;
+    line-height: 1.2;
 }
 
 /* ========================================
