@@ -77,12 +77,19 @@
             margin: 1.5rem 0;
         }
         .tech-badge {
-            background: rgba(255,255,255,0.2);
+            background: var(--primary-color);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 2rem;
             font-size: 0.875rem;
             font-weight: 500;
+        }
+        .architecture-diagram {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin: 2rem 0;
+            overflow-x: auto;
         }
         .code-block {
             background: #1e1e1e;
@@ -118,7 +125,7 @@
             <a href="index.html#projects" class="back-link">← Back to Projects</a>
             <h1 style="font-size: 3rem; margin-bottom: 1rem;">Real-Time Traffic Puzzle Validation Engine</h1>
             <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
-                High-performance solvability validation achieving 1000x speedup through novel iterative removal algorithm,
+                High-performance solvability validation engine enabling real-time level design through novel iterative removal algorithm,
                 processing 100,000+ production validations
             </p>
             <div class="tech-stack">
@@ -146,15 +153,21 @@
     <div class="container" style="padding: 4rem 2rem;">
         <section id="overview" style="margin-bottom: 4rem;">
             <h2 class="section-title">Executive Summary</h2>
-            <p class="lead">
+            <p class="lead" style="margin-bottom: 2rem;">
                 Developed a high-performance solvability validation engine for mobile game level design, enabling real-time
-                validation during the design process through a novel iterative removal algorithm.
+                validation during the design process through a novel iterative removal algorithm. The system processes complex
+                traffic puzzle configurations with multiple vehicles and obstacles, determining solvability in under 10 milliseconds.
             </p>
+
+            <div style="background: linear-gradient(135deg, #e8f8f5 0%, #d4f1f4 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #00D4AA; margin: 2rem 0;">
+                <h3 style="font-size: 1.25rem; color: #00A67E; margin-bottom: 1rem;">🔑 Key Innovation</h3>
+                <p style="font-size: 1.125rem; margin: 0;">
+                    Instead of exploring all possible vehicle removal orderings (O(V!) - factorial complexity), the algorithm
+                    removes <strong>all movable vehicles simultaneously per iteration</strong>, reducing complexity to O(V²).
+                </p>
+            </div>
+
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value">1000x</div>
-                    <div class="metric-label">Algorithm Speedup</div>
-                </div>
                 <div class="metric-card">
                     <div class="metric-value">&lt;10ms</div>
                     <div class="metric-label">Validation Time</div>
@@ -164,88 +177,313 @@
                     <div class="metric-label">Production Validations</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">96-98%</div>
-                    <div class="metric-label">Time Reduction</div>
+                    <div class="metric-value">2,000+</div>
+                    <div class="metric-label">Levels Created</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-value">O(V²)</div>
-                    <div class="metric-label">vs O(V!) BFS</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">0</div>
-                    <div class="metric-label">Production Incidents</div>
+                    <div class="metric-label">Complexity</div>
                 </div>
             </div>
         </section>
 
         <section id="problem" style="margin-bottom: 4rem;">
             <h2 class="section-title">The Challenge</h2>
-            <p class="lead">
+            <p class="lead" style="margin-bottom: 2rem;">
                 Mobile traffic puzzle games require designers to create solvable levels with specific difficulty ratings.
-                Manual testing was taking 1-2 hours per complex level.
+                Manual building & testing was taking 1-2 hours per complex level, creating a critical bottleneck in content creation.
             </p>
-            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Problem Complexity</h3>
-            <ul style="margin-left: 2rem; line-height: 2;">
-                <li><strong>State space explosion:</strong> Traditional BFS approach O(V!) for V vehicles</li>
-                <li><strong>Real-time requirement:</strong> Designers need instant feedback during level creation</li>
-                <li><strong>Edge cases:</strong> Must detect impossible configurations early</li>
-                <li><strong>No ML data:</strong> Limited training examples, rule-based approach required</li>
-            </ul>
+
+            <div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #e74c3c; margin: 2rem 0;">
+                <h3 style="font-size: 1.25rem; color: #e74c3c; margin-bottom: 1rem;">The Business Problem</h3>
+                <p style="margin-bottom: 1rem;">Level designers needed to manually playtest every vehicle placement during level creation:</p>
+                <ul style="margin-left: 2rem; line-height: 1.8;">
+                    <li>Place a vehicle → Play through entire level to verify solvability</li>
+                    <li>If unsolvable, try different placement → Playtest again</li>
+                    <li>Repeat for every vehicle (15-20 vehicles per complex level)</li>
+                    <li><strong>Result: 1-2 hours of trial-and-error testing per level</strong></li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 2rem; font-size: 1.5rem;">Technical Constraints</h3>
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); margin-top: 1rem;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">✓ <strong>Real-Time Performance:</strong> Sub-10ms validation for instant feedback during level design</li>
+                    <li style="margin-bottom: 0.5rem;">✓ <strong>State Space Explosion:</strong> Traditional BFS approach O(V!) for V vehicles - 18 vehicles = 6.4 quadrillion states</li>
+                    <li style="margin-bottom: 0.5rem;">✓ <strong>Complex Movement Rules:</strong> 5 movement types with turn restrictions and multi-lane intersection handling</li>
+                    <li style="margin-bottom: 0.5rem;">✓ <strong>Deterministic Accuracy:</strong> 100% accuracy required - no false positives or negatives allowed</li>
+                    <li>✓ <strong>Scalability:</strong> Support 30+ vehicles with multiple obstacle types</li>
+                </ul>
+            </div>
         </section>
 
         <section id="solution" style="margin-bottom: 4rem;">
-            <h2 class="section-title">Novel Algorithm Approach</h2>
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Iterative Removal Strategy</h3>
-            <p>Instead of searching all possible moves, identify and remove vehicles that can exit in current state:</p>
-            <div class="code-block">
-<span style="color: #608b4e;"># Novel O(V²) iterative removal algorithm</span>
+            <h2 class="section-title">Technical Solution</h2>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Three-Phase Validation Architecture</h3>
+            <p>
+                The system employs a graph-based approach with pre-calculated pathfinding and an iterative removal algorithm,
+                reducing complexity from O(V!) to O(V²).
+            </p>
+
+            <div class="architecture-diagram">
+                <h4 style="margin-bottom: 1rem;">Pipeline Overview</h4>
+                <pre style="font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; margin: 0;">
+[Level Designer Places Vehicle] → [AWS Lambda Validator]
+                                          ↓
+                        ┌─────────────────────────────────┐
+                        │  PHASE 1: Graph Construction    │
+                        │  (One-time per grid layout)     │
+                        │  • Convert grid to node graph   │
+                        │  • Build orientation-aware      │
+                        │    neighbor relationships       │
+                        │  • Cache result (MD5 hash)      │
+                        │  Cost: ~50ms (cached: ~0ms)     │
+                        └────────────┬────────────────────┘
+                                     ↓
+                        ┌─────────────────────────────────┐
+                        │  PHASE 2: Path Pre-Calculation  │
+                        │  (One-time per grid layout)     │
+                        │  • Calculate ALL exit paths     │
+                        │  • For every (Node × Orient ×   │
+                        │    MovementRule) combination    │
+                        │  • Validate turn restrictions   │
+                        │  • Store in O(1) lookup table   │
+                        │  Cost: Included in Phase 1      │
+                        └────────────┬────────────────────┘
+                                     ↓
+                        [Graph Cache Hit Rate: ~95%]
+                                     ↓
+                        ┌─────────────────────────────────┐
+                        │  PHASE 3: Iterative Validation  │
+                        │  (Per vehicle placement)        │
+                        │  • Find ALL movable vehicles    │
+                        │  • Remove simultaneously        │
+                        │  • Repeat until solved/blocked  │
+                        │  Complexity: O(V²)              │
+                        │  Cost: &lt;10ms per validation     │
+                        └────────────┬────────────────────┘
+                                     ↓
+                        ┌─────────────────────────────────┐
+                        │     [SOLVABLE / UNSOLVABLE]     │
+                        │                                 │
+                        │  If unsolvable: Return detailed │
+                        │  blocking analysis showing which│
+                        │  vehicles block each other      │
+                        └─────────────────────────────────┘
+                                     ↓
+                        [Real-time Feedback to Designer]
+                </pre>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Key Design Decisions</h3>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. Iterative Removal Algorithm (O(V²) vs O(V!))</h4>
+                <p><strong>Rationale:</strong> Traditional BFS explores all possible vehicle removal orderings - 18 vehicles = 6.4 quadrillion states</p>
+                <p><strong>Strategy:</strong> Key insight - if vehicles A and B can both exit in current state, removal order doesn't matter. Remove ALL movable vehicles per iteration.</p>
+                <p><strong>Impact:</strong> Reduced from seconds to milliseconds, enabling real-time validation during level design</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">2. Pre-Calculated Path Lookup Table</h4>
+                <p><strong>Rationale:</strong> Runtime pathfinding for each vehicle check would be too slow</p>
+                <p><strong>Strategy:</strong> Calculate all possible exit paths once during graph construction. Store in O(1) lookup table indexed by (node, orientation, movement_rule)</p>
+                <p><strong>Impact:</strong> Instant path validation during solving phase, eliminates repeated pathfinding calculations</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Multi-Layer Caching Strategy</h4>
+                <p><strong>Rationale:</strong> Same grid layouts used repeatedly (50-100 validations per level during design)</p>
+                <p><strong>Strategy:</strong> MD5 hash-based graph caching (95% hit rate), occupancy caching (79% speedup), custom position hashing (27% speedup)</p>
+                <p><strong>Impact:</strong> First validation: ~250ms cold start. Subsequent: &lt;10ms with warm cache</p>
+            </div>
+
+            <div class="code-block" style="margin-top: 2rem;">
+                <pre style="margin: 0; line-height: 1.6;"><span style="color: #608b4e;"># Novel O(V²) iterative removal algorithm</span>
 <span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">validate_puzzle</span>(board, vehicles):
-    removable = <span style="color: #569cd6;">True</span>
-    <span style="color: #c586c0;">while</span> removable:
-        removable = <span style="color: #569cd6;">False</span>
-        <span style="color: #c586c0;">for</span> vehicle <span style="color: #c586c0;">in</span> vehicles:
-            <span style="color: #c586c0;">if</span> can_exit(vehicle, board):
-                remove_vehicle(vehicle, board)
-                vehicles.remove(vehicle)
-                removable = <span style="color: #569cd6;">True</span>
-                <span style="color: #c586c0;">break</span>
+    solution_order = []
 
-    <span style="color: #c586c0;">return</span> <span style="color: #dcdcaa;">len</span>(vehicles) == <span style="color: #b5cea8;">0</span>  <span style="color: #608b4e;"># All vehicles removed = solvable</span>
+    <span style="color: #c586c0;">while</span> vehicles:
+        <span style="color: #608b4e;"># Find ALL vehicles that can exit right now</span>
+        movable = [v <span style="color: #c586c0;">for</span> v <span style="color: #c586c0;">in</span> vehicles <span style="color: #c586c0;">if</span> can_exit(v, board)]
 
-<span style="color: #608b4e;"># Complexity: O(V²) iterations vs O(V!) state exploration</span>
+        <span style="color: #c586c0;">if</span> <span style="color: #c586c0;">not</span> movable:
+            <span style="color: #c586c0;">return</span> {<span style="color: #ce9178;">"solvable"</span>: <span style="color: #569cd6;">False</span>, <span style="color: #ce9178;">"reason"</span>: <span style="color: #ce9178;">"Deadlock detected"</span>}
+
+        <span style="color: #608b4e;"># Remove all movable vehicles (order doesn't matter)</span>
+        <span style="color: #c586c0;">for</span> vehicle <span style="color: #c586c0;">in</span> movable:
+            remove_vehicle(vehicle, board)
+            vehicles.remove(vehicle)
+            solution_order.append(vehicle.id)
+
+    <span style="color: #c586c0;">return</span> {<span style="color: #ce9178;">"solvable"</span>: <span style="color: #569cd6;">True</span>, <span style="color: #ce9178;">"solution"</span>: solution_order}
+
+<span style="color: #608b4e;"># Key insight: Order within iteration doesn't matter</span>
+<span style="color: #608b4e;"># Only which iteration vehicles exit matters</span></pre>
             </div>
         </section>
 
         <section id="results" style="margin-bottom: 4rem;">
-            <h2 class="section-title">Results & Impact</h2>
-            <div style="overflow-x: auto; margin-top: 2rem;">
-                <table style="width: 100%; border-collapse: collapse;">
+            <h2 class="section-title">Results & Business Impact</h2>
+
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Performance Metrics</h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
                     <thead>
                         <tr style="background: var(--bg-secondary);">
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Metric</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Value</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Context</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Level Creation Time</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>1-2 hours → 5-10 minutes</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>3-5 minutes</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Down from 1-2 hours (92-98% reduction)</td>
                         </tr>
                         <tr>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Algorithm Speedup</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>1000x faster than BFS</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Algorithm Complexity</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>O(V²)</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">vs O(V!) for traditional BFS approach</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Validation Time</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;10ms</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Real-time feedback during design</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Production Validations</td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>100,000+</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Across 2,000+ levels</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Deployment</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>AWS Lambda</strong> (serverless)</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>AWS Lambda (Serverless)</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Zero operational overhead, auto-scaling</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem;">Production Incidents</td>
                             <td style="padding: 1rem;"><strong>Zero</strong></td>
+                            <td style="padding: 1rem;">100% reliability in production</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Performance Scaling</h3>
+            <p style="margin-bottom: 1rem;">
+                The algorithm maintains consistent performance as vehicle count increases, unlike traditional approaches:
+            </p>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Vehicle Count</th>
+                            <th style="padding: 1rem; text-align: center; border-bottom: 2px solid var(--border-color);">Validation Time</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">10 vehicles</td>
+                            <td style="padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color);"><strong>2.1ms</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Simple levels</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">18 vehicles</td>
+                            <td style="padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color);"><strong>2.8ms</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Complex production levels</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;">30 vehicles</td>
+                            <td style="padding: 1rem; text-align: center;"><strong>3.9ms</strong></td>
+                            <td style="padding: 1rem;">Stress test scenarios</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
+                Note: Performance remains under 10ms regardless of complexity
+            </p>
+        </section>
+
+        <section id="technical" style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Details</h2>
+
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Core Technologies</h3>
+            <ul style="margin-left: 2rem; line-height: 2;">
+                <li><strong>Language:</strong> Python 3 (pure stdlib - zero external dependencies)</li>
+                <li><strong>Deployment:</strong> AWS Lambda (serverless) + API Gateway</li>
+                <li><strong>Algorithm:</strong> Graph theory + custom iterative removal (O(V²))</li>
+                <li><strong>Data Structures:</strong> Orientation-aware graphs, pre-calculated path lookup tables</li>
+                <li><strong>Optimization:</strong> Multi-layer caching (graph cache, occupancy cache, custom position hashing)</li>
+            </ul>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Technical Challenges Solved</h3>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. State Space Explosion (O(V!) → O(V²))</h4>
+                <p><strong>Challenge:</strong> Traditional BFS explores all possible vehicle removal orderings - factorial complexity</p>
+                <p><strong>Solution:</strong> Novel insight that removal order within iteration doesn't matter. Remove ALL movable vehicles simultaneously per iteration.</p>
+                <p><strong>Result:</strong> Consistent sub-10ms performance enabling real-time validation</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">2. Complex Movement Constraints</h4>
+                <p><strong>Challenge:</strong> 5 movement types with turn restrictions, multi-lane intersections, consecutive turn prevention</p>
+                <p><strong>Solution:</strong> Pre-calculate all valid exit paths during graph construction. Store in O(1) lookup table indexed by (node, orientation, movement_rule)</p>
+                <p><strong>Result:</strong> Instant path validation during solving phase</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Designer Experience (Unsolvable Level Debugging)</h4>
+                <p><strong>Challenge:</strong> When levels are unsolvable, designers need to know WHY to fix them</p>
+                <p><strong>Solution:</strong> Detailed blocking analysis identifying which vehicles block each other and providing specific fix suggestions</p>
+                <p><strong>Result:</strong> Designers can immediately see and fix issues without trial-and-error testing</p>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Code Organization</h3>
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                <pre style="margin: 0; font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6;">
+app/
+├── core/                      # Algorithmic logic (1,284 LOC)
+│   ├── graph_builder.py       # Grid → Graph conversion
+│   ├── graph_cache.py         # Layout-based caching (MD5)
+│   ├── path_calculator.py     # Pre-calculate all exit paths
+│   └── solver.py              # Iterative removal algorithm
+├── models/                    # Domain models (immutable)
+│   ├── graph.py               # RoadGraph, Node, Position
+│   ├── vehicles.py            # Vehicle types (Car, Truck, Bulldozer)
+│   └── game_state.py          # State management + caching
+└── lambda_function.py         # AWS Lambda entry point</pre>
+            </div>
+
+            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Performance Optimizations</h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Optimization</th>
+                            <th style="padding: 1rem; text-align: center; border-bottom: 2px solid var(--border-color);">Impact</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid var(--border-color);">Implementation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>Graph Cache</strong></td>
+                            <td style="padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color);">95% hit rate</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">MD5 hash of grid layout with LRU eviction</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>Occupancy Cache</strong></td>
+                            <td style="padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color);">79% speedup</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Cache occupied positions per game state</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;"><strong>Position Hash</strong></td>
+                            <td style="padding: 1rem; text-align: center;">27% speedup</td>
+                            <td style="padding: 1rem;">Custom bitwise hash (x << 16) ^ y for frozen Position</td>
                         </tr>
                     </tbody>
                 </table>
