@@ -202,7 +202,7 @@
             <h2 class="section-title">The Challenge</h2>
             <p class="lead">
                 Official document photos have strict ICAO (International Civil Aviation Organization) compliance requirements.
-                Approximately 50% of user-submitted photos fail due to:
+                Approximately 55% of non-expert or DIY photos fail due to:
             </p>
             <ul style="margin-left: 2rem; line-height: 2;">
                 <li>Incorrect head positioning and pose</li>
@@ -347,12 +347,12 @@
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Stage 1 Processing Time</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;3 seconds</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;12 seconds</strong></td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Rekognition + SageMaker</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Stage 2 Processing Time</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;8 seconds</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>&lt;25 seconds</strong></td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">GPT-4 Vision API</td>
                         </tr>
                         <tr>
@@ -380,7 +380,7 @@
                 </div>
                 <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
                     <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Cost Efficiency</h4>
-                    <p>10x cheaper than manual review at scale</p>
+                    <p>Cheaper than visiting photo booth</p>
                 </div>
             </div>
         </section>
@@ -394,7 +394,7 @@
 
             <div class="code-block" style="margin-top: 1rem;">
 <span style="color: #608b4e;"># Prompt engineering for GPT-4 Vision</span>
-COMPLIANCE_PROMPT = <span style="color: #ce9178;">"""
+SAMPLED_COMPLIANCE_PROMPT = <span style="color: #ce9178;">"""
 You are an ICAO photo compliance validator. Analyze this official document photo.
 
 REQUIRED CHECKS:
