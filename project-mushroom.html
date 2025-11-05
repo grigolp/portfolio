@@ -148,9 +148,20 @@
         <section id="overview" style="margin-bottom: 4rem;">
             <h2 class="section-title">Executive Summary</h2>
             <p class="lead">
-                Developed an automated mushroom detection and sizing system for agricultural production environments,
-                replacing manual visual inspection with classical computer vision techniques.
+                Developed an automated computer vision system for real-time mushroom detection and sizing in commercial mushroom farming.
+                The system replaced manual visual inspection of growing racks, enabling automated harvest timing optimization and yield
+                estimation from existing video surveillance feeds. By choosing classical computer vision over the client's initial ML request,
+                delivered faster development, zero training data requirements, and deterministic performance.
             </p>
+
+            <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342; margin: 2rem 0;">
+                <h3 style="font-size: 1.25rem; color: #558B2F; margin-bottom: 1rem;">Key Innovation</h3>
+                <p style="font-size: 1.125rem; margin: 0;">
+                    Successfully advocated for <strong>classical CV over machine learning</strong>, demonstrating that domain-appropriate
+                    classical algorithms can outperform deep learning for well-defined geometric detection tasks while delivering
+                    <strong>2x faster</strong> and <strong>50% cheaper</strong>.
+                </p>
+            </div>
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-value">6 weeks</div>
@@ -182,16 +193,30 @@
         <section id="problem" style="margin-bottom: 4rem;">
             <h2 class="section-title">The Challenge</h2>
             <p class="lead">
-                Agricultural mushroom production requires yield estimation from existing camera feeds, but manual counting
-                is time-consuming and error-prone.
+                A commercial mushroom farming operation needed to optimize harvest timing and estimate potential yields across their
+                growing facilities. The critical business challenge: determining the optimal harvest window - too early results in
+                undersized mushrooms and lost revenue, too late causes quality degradation and reduced market value.
             </p>
+
+            <div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #e74c3c; margin: 2rem 0;">
+                <h3 style="font-size: 1.25rem; color: #e74c3c; margin-bottom: 1rem;">The Business Problem</h3>
+                <p style="margin-bottom: 1rem;">The farm had video surveillance cameras monitoring growing racks but lacked automated analysis. Staff manually:</p>
+                <ul style="margin-left: 2rem; line-height: 1.8;">
+                    <li>Reviewed camera feeds and physically inspected racks to count mushrooms</li>
+                    <li>Estimated individual mushroom sizes subjectively</li>
+                    <li>Decided harvest timing for each rack based on visual assessment</li>
+                    <li><strong>Time-intensive:</strong> Constant monitoring with inconsistent results</li>
+                    <li><strong>Not scalable:</strong> Limited by staff hours and attention capacity</li>
+                </ul>
+            </div>
+
             <h3 style="margin-top: 2rem; font-size: 1.5rem;">Technical Challenges</h3>
             <ul style="margin-left: 2rem; line-height: 2;">
-                <li><strong>Dense clustering:</strong> Mushrooms grow close together, often touching</li>
-                <li><strong>Variable lighting:</strong> Growing environments have inconsistent illumination</li>
-                <li><strong>No training data:</strong> Limited labeled examples for ML approaches</li>
-                <li><strong>Time sensitivity:</strong> Client needed solution in 6-8 weeks</li>
-                <li><strong>Hardware constraints:</strong> Must run on standard computers</li>
+                <li><strong>Dense clustering:</strong> White mushrooms growing in tight groups appear as continuous blob with minimal color/texture variation</li>
+                <li><strong>Variable lighting:</strong> Direct sunlight, artificial growing lights, varying camera positions create uneven illumination</li>
+                <li><strong>No training data:</strong> Client had no labeled dataset; collecting 1000s of labeled images would cost $5,000-$20,000</li>
+                <li><strong>Time sensitivity:</strong> Client needed solution in 6-8 weeks to meet growing season</li>
+                <li><strong>Hardware constraints:</strong> Must run on existing farm infrastructure without GPUs</li>
             </ul>
 
             <h3 style="margin-top: 2rem; font-size: 1.5rem;">Why Classical CV Over ML?</h3>
@@ -278,6 +303,88 @@ normalized = clahe.apply(grayscale_image)
 
 <span style="color: #608b4e;"># Handles variable lighting across image regions</span>
 <span style="color: #608b4e;"># Critical for mushrooms at different distances from lights</span></pre>
+
+            <h3 style="font-size: 1.75rem; margin: 3rem 0 1rem;">Key Design Decisions</h3>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. Dual-Radius Estimation Strategy</h4>
+                <p><strong>Challenge:</strong> Different lighting conditions affect edge detection differently</p>
+                <p><strong>Solution:</strong> Calculate two radius measurements per mushroom - one from standard preprocessing, one from histogram-equalized preprocessing</p>
+                <p><strong>Impact:</strong> Provides fallback measurement when one method struggles; users can select more reliable metric based on image quality</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">2. Distance Transform Over Hough Circles</h4>
+                <p><strong>Challenge:</strong> Traditional Hough Circle Transform struggles with partial occlusion in clusters</p>
+                <p><strong>Solution:</strong> Use distance transforms combined with peak detection for circle centers</p>
+                <p><strong>Impact:</strong> More robust to overlapping mushrooms, computationally efficient, handles size variation without parameter sweeping</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Mathematical Radius Compensation</h4>
+                <div class="code-block" style="margin-top: 1rem;">
+<span style="color: #608b4e;"># Novel compensation for threshold-induced radius underestimation</span>
+coeff = <span style="color: #b5cea8;">1</span> + (threshold - back_threshold) / (<span style="color: #b5cea8;">255</span> - back_threshold)
+radius_corrected = radius_raw × coeff
+
+<span style="color: #608b4e;"># Accounts for erosion effect of binary thresholding</span>
+<span style="color: #608b4e;"># Improves size accuracy by ~10-15%</span></div>
+                <p style="margin-top: 1rem;"><strong>Innovation:</strong> Developed mathematical adjustment for radius underestimation caused by threshold values, accounting for the erosion effect of binary thresholding on circular boundaries</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom: 4rem;">
+            <h2 class="section-title">Technical Challenges & Solutions</h2>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin: 2rem 0;">
+                <div style="border-left: 4px solid #7CB342; padding-left: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Challenge 1: Separating Clustered Mushrooms</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        The most significant technical challenge: distinguishing individual mushrooms in dense clusters. White mushrooms
+                        growing in tight groups appear as continuous blob with minimal color/texture variation to indicate boundaries.
+                    </p>
+                    <p><strong>Attempted Approaches:</strong></p>
+                    <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <li>Watershed segmentation: Too sensitive to noise, created over-segmentation</li>
+                        <li>Contour-based detection: Failed on irregular cluster shapes</li>
+                        <li>Simple Hough Circle Transform: Missed mushrooms in overlapping configurations</li>
+                    </ul>
+                    <p><strong>Final Solution:</strong> Multi-technique approach combining adaptive morphological operations (scaled to minimum diameter),
+                    distance transform peak detection, and dual-method radius estimation</p>
+                    <p><strong>Results:</strong> Successfully separates 80-90% of clustered mushrooms</p>
+                </div>
+
+                <div style="border-left: 4px solid #7CB342; padding-left: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Challenge 2: Handling Variable Lighting</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Agricultural environments have highly variable lighting: direct sunlight creates harsh shadows and glare,
+                        artificial growing lights create uneven illumination, camera positions vary in distance and angle.
+                    </p>
+                    <p><strong>Solution:</strong> CLAHE (Contrast Limited Adaptive Histogram Equalization) with dual-track processing:</p>
+                    <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <li>Standard pipeline for well-lit images</li>
+                        <li>CLAHE-enhanced pipeline for difficult lighting</li>
+                        <li>Clip limit: 2.0 (balances enhancement vs. noise amplification)</li>
+                        <li>Tile size: 8×8 (appropriate for mushroom-scale features)</li>
+                    </ul>
+                    <p><strong>Results:</strong> Successfully processes images from various camera positions and times of day without manual intervention</p>
+                </div>
+
+                <div style="border-left: 4px solid #7CB342; padding-left: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Challenge 3: Convincing Client to Avoid ML</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Client initially requested machine learning solution, believing it was necessary for robust detection.
+                    </p>
+                    <p><strong>Strategy:</strong></p>
+                    <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <li>Documented that mushrooms are primarily circular geometric objects</li>
+                        <li>Early prototype on sample images demonstrating detection effectiveness</li>
+                        <li>Side-by-side comparison of development timelines and costs</li>
+                        <li>Showed deterministic, explainable results vs. black-box ML</li>
+                    </ul>
+                    <p><strong>Results:</strong> Client approved classical CV approach, resulting in 2x faster, 50% cheaper, and more maintainable solution</p>
+                </div>
+            </div>
         </section>
 
         <section id="results" style="margin-bottom: 4rem;">
@@ -326,23 +433,49 @@ normalized = clahe.apply(grayscale_image)
                 </table>
             </div>
 
-            <h3 style="font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1rem;">Business Value</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Automated Yield Estimation</h4>
-                    <p>Replaced manual counting with automated analysis</p>
+            <h3 style="font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1rem;">Business Value Delivered</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Automated Manual Process</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Eliminated need for staff to manually review camera feeds and physically inspect racks.
+                        What required continuous monitoring became fully automated daily analysis.
+                    </p>
                 </div>
-                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Fast Delivery</h4>
-                    <p>6-week turnaround met tight deadline</p>
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Data-Driven Decisions</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Provided objective size measurements vs. subjective visual assessment. Enabled trend tracking
+                        to predict optimal harvest windows and rack-by-rack yield estimation for logistics planning.
+                    </p>
                 </div>
-                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Cost Effective</h4>
-                    <p>50% cheaper than ML approach</p>
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Existing Infrastructure</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Leveraged existing surveillance camera system. No new hardware required - processed screenshot
+                        captures from current video feeds.
+                    </p>
                 </div>
-                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md);">
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Cost-Effective Delivery</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        6-week delivery vs. 12+ weeks for ML. No data annotation costs ($5,000-$20,000 saved).
+                        No GPU infrastructure required. 50% lower computational costs.
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Deterministic Results</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Every detection traceable to specific algorithm steps. Results consistent and reproducible.
+                        Parameter adjustments have predictable effects.
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
                     <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Client Control</h4>
-                    <p>Tunable parameters for different conditions</p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Comprehensive configuration system with different parameter sets per camera position.
+                        Adaptable to different mushroom varieties and growing stages.
+                    </p>
                 </div>
             </div>
         </section>
