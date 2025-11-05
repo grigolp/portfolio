@@ -248,8 +248,7 @@
             </div>
 
             <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Key Algorithm: Distance Transform + Watershed</h3>
-            <div class="code-block">
-<span style="color: #608b4e;"># Distance transform for separating clustered mushrooms</span>
+            <pre class="code-block"><span style="color: #608b4e;"># Distance transform for separating clustered mushrooms</span>
 <span style="color: #c586c0;">import</span> cv2
 <span style="color: #c586c0;">import</span> numpy <span style="color: #c586c0;">as</span> np
 <span style="color: #c586c0;">from</span> scipy <span style="color: #c586c0;">import</span> ndimage
@@ -270,18 +269,15 @@ labels = cv2.watershed(image, markers)
         <span style="color: #c586c0;">continue</span>
     mask = (labels == label).astype(<span style="color: #dcdcaa;">np.uint8</span>)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    <span style="color: #608b4e;"># Process each mushroom...</span>
-            </div>
+    <span style="color: #608b4e;"># Process each mushroom...</span></pre>
 
             <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">CLAHE for Lighting Normalization</h3>
-            <div class="code-block">
-<span style="color: #608b4e;"># Contrast Limited Adaptive Histogram Equalization</span>
+            <pre class="code-block"><span style="color: #608b4e;"># Contrast Limited Adaptive Histogram Equalization</span>
 clahe = cv2.createCLAHE(clipLimit=<span style="color: #b5cea8;">2.0</span>, tileGridSize=(<span style="color: #b5cea8;">8</span>, <span style="color: #b5cea8;">8</span>))
 normalized = clahe.apply(grayscale_image)
 
 <span style="color: #608b4e;"># Handles variable lighting across image regions</span>
-<span style="color: #608b4e;"># Critical for mushrooms at different distances from lights</span>
-            </div>
+<span style="color: #608b4e;"># Critical for mushrooms at different distances from lights</span></pre>
         </section>
 
         <section id="results" style="margin-bottom: 4rem;">
