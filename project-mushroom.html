@@ -148,18 +148,18 @@
         <section id="overview" style="margin-bottom: 4rem;">
             <h2 class="section-title">Executive Summary</h2>
             <p class="lead">
-                Developed an automated computer vision system for real-time mushroom detection and sizing in commercial mushroom farming.
-                The system replaced manual visual inspection of growing racks, enabling automated harvest timing optimization and yield
-                estimation from existing video surveillance feeds. By choosing classical computer vision over the client's initial ML request,
-                delivered faster development, zero training data requirements, and deterministic performance.
+                Automated mushroom detection and sizing system for agricultural production environments. Processes daily
+                screenshot captures from existing video surveillance to count mushrooms, measure diameters, and output
+                structured data (CSV) for harvest timing decisions. Uses classical computer vision techniques instead of
+                machine learning due to time constraints, lack of training data, and well-defined geometric problem structure.
             </p>
 
             <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342; margin: 2rem 0;">
-                <h3 style="font-size: 1.25rem; color: #558B2F; margin-bottom: 1rem;">Key Innovation</h3>
+                <h3 style="font-size: 1.25rem; color: #558B2F; margin-bottom: 1rem;">Technical Approach</h3>
                 <p style="font-size: 1.125rem; margin: 0;">
-                    Successfully advocated for <strong>classical CV over machine learning</strong>, demonstrating that domain-appropriate
-                    classical algorithms can outperform deep learning for well-defined geometric detection tasks while delivering
-                    <strong>2x faster</strong> and <strong>50% cheaper</strong>.
+                    Classical computer vision (distance transforms + morphological operations) instead of deep learning.
+                    Rationale: Mushrooms are circular objects with predictable geometry. Classical methods provide
+                    deterministic results, require no training data, and process images in &lt;1 second on standard CPUs.
                 </p>
             </div>
             <div class="metrics-grid">
@@ -193,20 +193,22 @@
         <section id="problem" style="margin-bottom: 4rem;">
             <h2 class="section-title">The Challenge</h2>
             <p class="lead">
-                A commercial mushroom farming operation needed to optimize harvest timing and estimate potential yields across their
-                growing facilities. The critical business challenge: determining the optimal harvest window - too early results in
-                undersized mushrooms and lost revenue, too late causes quality degradation and reduced market value.
+                Commercial mushroom farm needed automated yield estimation from existing video surveillance feeds.
+                Manual counting was time-consuming and harvest timing decisions were subjective.
+                Project scope: process daily screenshot captures, detect/count individual mushrooms, measure sizes,
+                output structured data for integration with farm management systems.
             </p>
 
             <div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #e74c3c; margin: 2rem 0;">
-                <h3 style="font-size: 1.25rem; color: #e74c3c; margin-bottom: 1rem;">The Business Problem</h3>
-                <p style="margin-bottom: 1rem;">The farm had video surveillance cameras monitoring growing racks but lacked automated analysis. Staff manually:</p>
-                <ul style="margin-left: 2rem; line-height: 1.8;">
-                    <li>Reviewed camera feeds and physically inspected racks to count mushrooms</li>
-                    <li>Estimated individual mushroom sizes subjectively</li>
-                    <li>Decided harvest timing for each rack based on visual assessment</li>
-                    <li><strong>Time-intensive:</strong> Constant monitoring with inconsistent results</li>
-                    <li><strong>Not scalable:</strong> Limited by staff hours and attention capacity</li>
+                <h3 style="font-size: 1.25rem; color: #e74c3c; margin-bottom: 1rem;">Requirements</h3>
+                <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 0;">
+                    <li>Process screenshot captures from existing camera infrastructure</li>
+                    <li>Detect and count individual mushrooms in clustered environments</li>
+                    <li>Measure diameter of each mushroom for harvest readiness assessment</li>
+                    <li>Handle uneven lighting conditions (direct sunlight, artificial growing lights)</li>
+                    <li>Output structured data (CSV) for farm management system integration</li>
+                    <li>Deliver functional system within 6-8 week timeline</li>
+                    <li>Run on standard farm computers (no GPU infrastructure)</li>
                 </ul>
             </div>
 
@@ -214,7 +216,7 @@
             <ul style="margin-left: 2rem; line-height: 2;">
                 <li><strong>Dense clustering:</strong> White mushrooms growing in tight groups appear as continuous blob with minimal color/texture variation</li>
                 <li><strong>Variable lighting:</strong> Direct sunlight, artificial growing lights, varying camera positions create uneven illumination</li>
-                <li><strong>No training data:</strong> Client had no labeled dataset; collecting 1000s of labeled images would cost $5,000-$20,000</li>
+                <li><strong>No training data:</strong> Client had no labeled dataset</li>
                 <li><strong>Time sensitivity:</strong> Client needed solution in 6-8 weeks to meet growing season</li>
                 <li><strong>Hardware constraints:</strong> Must run on existing farm infrastructure without GPUs</li>
             </ul>
@@ -322,13 +324,12 @@ normalized = clahe.apply(grayscale_image)
 
             <div style="margin-bottom: 2rem;">
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Mathematical Radius Compensation</h4>
-                <div class="code-block" style="margin-top: 1rem;">
-<span style="color: #608b4e;"># Novel compensation for threshold-induced radius underestimation</span>
+                <pre class="code-block" style="margin-top: 1rem;"><span style="color: #608b4e;"># Novel compensation for threshold-induced radius underestimation</span>
 coeff = <span style="color: #b5cea8;">1</span> + (threshold - back_threshold) / (<span style="color: #b5cea8;">255</span> - back_threshold)
 radius_corrected = radius_raw × coeff
 
 <span style="color: #608b4e;"># Accounts for erosion effect of binary thresholding</span>
-<span style="color: #608b4e;"># Improves size accuracy by ~10-15%</span></div>
+<span style="color: #608b4e;"># Improves size accuracy by ~10-15%</span></pre>
                 <p style="margin-top: 1rem;"><strong>Innovation:</strong> Developed mathematical adjustment for radius underestimation caused by threshold values, accounting for the erosion effect of binary thresholding on circular boundaries</p>
             </div>
         </section>
@@ -371,18 +372,19 @@ radius_corrected = radius_raw × coeff
                 </div>
 
                 <div style="border-left: 4px solid #7CB342; padding-left: 1.5rem;">
-                    <h4 style="margin-bottom: 0.5rem;">Challenge 3: Convincing Client to Avoid ML</h4>
+                    <h4 style="margin-bottom: 0.5rem;">Challenge 3: Technology Selection - Classical CV vs ML</h4>
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        Client initially requested machine learning solution, believing it was necessary for robust detection.
+                        Client initially requested machine learning solution. Project requirements analysis suggested
+                        classical CV was more appropriate for this specific use case.
                     </p>
-                    <p><strong>Strategy:</strong></p>
+                    <p><strong>Analysis:</strong></p>
                     <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 1rem;">
-                        <li>Documented that mushrooms are primarily circular geometric objects</li>
-                        <li>Early prototype on sample images demonstrating detection effectiveness</li>
-                        <li>Side-by-side comparison of development timelines and costs</li>
-                        <li>Showed deterministic, explainable results vs. black-box ML</li>
+                        <li>Problem is geometric detection (circular objects) rather than complex pattern recognition</li>
+                        <li>No labeled training dataset available; creating one would require significant time/cost</li>
+                        <li>6-8 week timeline incompatible with ML data collection + training cycle</li>
+                        <li>Classical methods provide deterministic, debuggable results</li>
                     </ul>
-                    <p><strong>Results:</strong> Client approved classical CV approach, resulting in 2x faster, 50% cheaper, and more maintainable solution</p>
+                    <p><strong>Outcome:</strong> Built early prototype with sample images demonstrating classical CV effectiveness. Client approved approach after reviewing timeline/cost comparison.</p>
                 </div>
             </div>
         </section>
@@ -433,48 +435,48 @@ radius_corrected = radius_raw × coeff
                 </table>
             </div>
 
-            <h3 style="font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1rem;">Business Value Delivered</h3>
+            <h3 style="font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1rem;">Impact & Outcomes</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Automated Manual Process</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Automated Analysis</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Eliminated need for staff to manually review camera feeds and physically inspect racks.
-                        What required continuous monitoring became fully automated daily analysis.
+                        Replaced manual camera feed review and physical rack inspection with automated daily processing.
+                        System processes screenshot captures and outputs structured CSV data.
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Data-Driven Decisions</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Quantitative Measurements</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Provided objective size measurements vs. subjective visual assessment. Enabled trend tracking
-                        to predict optimal harvest windows and rack-by-rack yield estimation for logistics planning.
+                        System provides objective diameter measurements and mushroom counts. Data enables
+                        rack-by-rack yield estimation and harvest timing analysis.
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Existing Infrastructure</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">No Infrastructure Changes</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Leveraged existing surveillance camera system. No new hardware required - processed screenshot
-                        captures from current video feeds.
+                        Works with existing surveillance camera system. Processes screenshot captures from
+                        current video feeds without requiring new hardware installation.
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Cost-Effective Delivery</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Development Timeline</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        6-week delivery vs. 12+ weeks for ML. No data annotation costs ($5,000-$20,000 saved).
-                        No GPU infrastructure required. 50% lower computational costs.
+                        6-week development period met project deadline. Classical CV approach avoided
+                        12+ week data collection/labeling phase required for ML training.
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Deterministic Results</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Algorithm Transparency</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Every detection traceable to specific algorithm steps. Results consistent and reproducible.
-                        Parameter adjustments have predictable effects.
+                        Deterministic algorithm with traceable detection steps. Results are reproducible
+                        and parameter adjustments have predictable effects on output.
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #7CB342;">
-                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Client Control</h4>
+                    <h4 style="color: #7CB342; margin-bottom: 0.5rem;">Configurable Parameters</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Comprehensive configuration system with different parameter sets per camera position.
-                        Adaptable to different mushroom varieties and growing stages.
+                        Parameter configuration system allows tuning for different camera positions,
+                        mushroom varieties, and growing stages without code changes.
                     </p>
                 </div>
             </div>
