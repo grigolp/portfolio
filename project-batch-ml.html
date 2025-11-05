@@ -311,8 +311,7 @@
             </div>
 
             <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Modular Architecture</h3>
-            <div class="code-block">
-<span style="color: #608b4e;"># Core modules (src/ directory)</span>
+            <div class="code-block"><pre style="margin: 0; font-family: inherit; font-size: inherit;"><span style="color: #608b4e;"># Core modules (src/ directory)</span>
 src/
 ├── config_schema.py       <span style="color: #608b4e;"># Pydantic validation for type safety</span>
 ├── data_loader.py         <span style="color: #608b4e;"># S3/local abstraction with retry logic</span>
@@ -325,7 +324,7 @@ src/
 <span style="color: #608b4e;"># Entry points</span>
 training.py                <span style="color: #608b4e;"># Local single-horizon training</span>
 inference.py               <span style="color: #608b4e;"># Multi-horizon prediction pipeline</span>
-batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestration layer</span>
+batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestration layer</span></pre>
             </div>
         </section>
 

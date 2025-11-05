@@ -229,14 +229,6 @@ if ('IntersectionObserver' in window) {
 }
 
 // ========================================
-// Console Easter Egg (optional fun addition)
-// ========================================
-
-console.log('%c👋 Hello fellow developer!', 'font-size: 20px; font-weight: bold; color: #0066CC;');
-console.log('%cInterested in working together? Reach out!', 'font-size: 14px; color: #4A5568;');
-console.log('%c[your.email@example.com]', 'font-size: 14px; color: #0066CC; font-weight: bold;');
-
-// ========================================
 // Performance: Debounce Scroll Events
 // ========================================
 
