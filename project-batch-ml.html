@@ -127,7 +127,7 @@
             <a href="index.html#projects" class="back-link">← Back to Projects</a>
             <h1 style="font-size: 3rem; margin-bottom: 1rem;">Enterprise ML Pipeline with AWS Batch</h1>
             <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
-                Production-ready multi-horizon sales forecasting pipeline achieving 15x training speedup through
+                Production-ready multi-horizon sales forecasting pipeline achieving 60x training speedup through
                 AWS Batch parallelization and 70% cost reduction using spot instances
             </p>
             <div class="tech-stack">
@@ -168,7 +168,7 @@
             </p>
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value">15x</div>
+                    <div class="metric-value">60x</div>
                     <div class="metric-label">Training Speedup</div>
                 </div>
                 <div class="metric-card">
@@ -176,7 +176,7 @@
                     <div class="metric-label">Cost Reduction</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">48h</div>
+                    <div class="metric-value">12h</div>
                     <div class="metric-label">Full Training Cycle</div>
                 </div>
                 <div class="metric-card">
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <p style="margin-top: 2rem;">
-                <strong>Impact:</strong> Transformed a 30-day sequential training process into a 48-hour parallel operation
+                <strong>Impact:</strong> Transformed a 30-day sequential training process into a 12-hour parallel operation
                 while reducing infrastructure costs from ~$750/cycle to ~$225/cycle using AWS Batch spot instances.
             </p>
         </section>
@@ -286,7 +286,7 @@
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. AWS Batch Array Jobs</h4>
                 <p><strong>Rationale:</strong> Native parallel processing without manual orchestration</p>
                 <p><strong>Implementation:</strong> 1 parent job spawns 18 child tasks, each training 1 horizon</p>
-                <p><strong>Impact:</strong> 30 days → 48 hours (limited by longest-running task)</p>
+                <p><strong>Impact:</strong> 30 days → 12 hours (limited by longest-running task)</p>
             </div>
 
             <div style="margin-bottom: 2rem;">
@@ -348,8 +348,8 @@ batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestrati
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Time</td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">30 days</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>48 hours</strong></td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">15x faster</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>12 hours</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">60x faster</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Cost/Cycle</td>
@@ -405,60 +405,6 @@ batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestrati
                 </div>
             </div>
         </section>
-
-        <!-- Technical Deep Dive -->
-        <section id="technical" style="margin-bottom: 4rem;">
-            <h2 class="section-title">Technical Deep Dive</h2>
-
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Two-Stage Model Architecture</h3>
-            <p>Handling zero-inflated sales data requires specialized approach:</p>
-
-            <div class="code-block" style="margin-top: 1rem;">
-<span style="color: #608b4e;"># Stage 1: Binary Classifier (Will there be sales?)</span>
-classifier = XGBClassifier(
-    objective=<span style="color: #ce9178;">'binary:logistic'</span>,
-    scale_pos_weight=<span style="color: #b5cea8;">calculate_class_weight</span>(),  <span style="color: #608b4e;"># Handle imbalance</span>
-    max_depth=<span style="color: #b5cea8;">8</span>,
-    learning_rate=<span style="color: #b5cea8;">0.05</span>,
-    n_estimators=<span style="color: #b5cea8;">500</span>
-)
-
-<span style="color: #608b4e;"># Stage 2: Regressor (How much sales?) - trained only on non-zero examples</span>
-regressor = XGBRegressor(
-    objective=<span style="color: #ce9178;">'reg:squarederror'</span>,
-    max_depth=<span style="color: #b5cea8;">10</span>,
-    learning_rate=<span style="color: #b5cea8;">0.03</span>,
-    n_estimators=<span style="color: #b5cea8;">800</span>
-)
-
-<span style="color: #608b4e;"># Bayesian hyperparameter optimization using Optuna</span>
-<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">objective</span>(trial):
-    params = {
-        <span style="color: #ce9178;">'max_depth'</span>: trial.suggest_int(<span style="color: #ce9178;">'max_depth'</span>, <span style="color: #b5cea8;">3</span>, <span style="color: #b5cea8;">12</span>),
-        <span style="color: #ce9178;">'learning_rate'</span>: trial.suggest_float(<span style="color: #ce9178;">'learning_rate'</span>, <span style="color: #b5cea8;">0.01</span>, <span style="color: #b5cea8;">0.3</span>),
-        <span style="color: #ce9178;">'subsample'</span>: trial.suggest_float(<span style="color: #ce9178;">'subsample'</span>, <span style="color: #b5cea8;">0.6</span>, <span style="color: #b5cea8;">1.0</span>),
-    }
-    <span style="color: #c586c0;">return</span> cv_score(params)
-
-study = optuna.create_study(direction=<span style="color: #ce9178;">'maximize'</span>)
-study.optimize(objective, n_trials=<span style="color: #b5cea8;">50</span>)
-            </div>
-
-            <h3 style="font-size: 1.75rem; margin: 3rem 0 1rem;">S3 Retry Logic with Exponential Backoff</h3>
-            <div class="code-block">
-<span style="color: #608b4e;"># Robust S3 operations with retry</span>
-<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">upload_with_retry</span>(local_path, s3_path, max_retries=<span style="color: #b5cea8;">5</span>):
-    <span style="color: #c586c0;">for</span> attempt <span style="color: #c586c0;">in</span> <span style="color: #dcdcaa;">range</span>(max_retries):
-        <span style="color: #c586c0;">try</span>:
-            s3_client.upload_file(local_path, bucket, s3_path)
-            logger.info(<span style="color: #ce9178;">f"Uploaded {s3_path}"</span>)
-            <span style="color: #c586c0;">return</span> <span style="color: #569cd6;">True</span>
-        <span style="color: #c586c0;">except</span> ClientError <span style="color: #c586c0;">as</span> e:
-            wait_time = <span style="color: #b5cea8;">2</span> ** attempt  <span style="color: #608b4e;"># Exponential backoff</span>
-            logger.warning(<span style="color: #ce9178;">f"Upload failed, retry {attempt+1}/{max_retries} in {wait_time}s"</span>)
-            time.sleep(wait_time)
-    <span style="color: #c586c0;">raise</span> RuntimeError(<span style="color: #ce9178;">f"Failed to upload {s3_path} after {max_retries} attempts"</span>)
-            </div>
 
             <h3 style="font-size: 1.75rem; margin: 3rem 0 1rem;">Skills Demonstrated</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
