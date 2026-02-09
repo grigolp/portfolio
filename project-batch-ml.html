@@ -127,18 +127,22 @@
             <a href="index.html#projects" class="back-link">← Back to Projects</a>
             <h1 style="font-size: 3rem; margin-bottom: 1rem;">Enterprise ML Pipeline with AWS Batch</h1>
             <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
-                Production-ready multi-horizon sales forecasting pipeline achieving 60x training speedup through
-                AWS Batch parallelization and 70% cost reduction using spot instances
+                Production-ready multi-horizon sales forecasting pipeline orchestrated end-to-end with AWS Step Functions
+                and parallelized across AWS Batch, achieving ~40x training speedup and ~70% cost reduction using spot instances
             </p>
             <div class="tech-stack">
+                <span class="tech-badge">AWS Step Functions</span>
                 <span class="tech-badge">AWS Batch</span>
-                <span class="tech-badge">XGBoost</span>
+                <span class="tech-badge">AWS Lambda</span>
+                <span class="tech-badge">Terraform</span>
                 <span class="tech-badge">Docker</span>
+                <span class="tech-badge">XGBoost</span>
+                <span class="tech-badge">Scikit-learn</span>
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Pydantic</span>
                 <span class="tech-badge">S3</span>
                 <span class="tech-badge">CloudWatch</span>
-                <span class="tech-badge">Pydantic</span>
-                <span class="tech-badge">Python</span>
-                <span class="tech-badge">Scikit-learn</span>
+                <span class="tech-badge">ECR</span>
             </div>
         </div>
     </section>
@@ -164,19 +168,16 @@
             <h2 class="section-title">Executive Summary</h2>
             <p class="lead">
                 Designed and deployed a production-ready machine learning pipeline for multi-horizon sales forecasting,
-                leveraging AWS Batch for parallel model training across 18 forecast horizons.
+                orchestrated end-to-end with AWS Step Functions and parallelized across AWS Batch. The system processes
+                data from Anaplan through feature engineering, model training, and inference — supporting 7 flexible execution modes.
             </p>
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value">60x</div>
+                    <div class="metric-value">~40x</div>
                     <div class="metric-label">Training Speedup</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">70%</div>
-                    <div class="metric-label">Cost Reduction</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">12h</div>
+                    <div class="metric-value">~18h</div>
                     <div class="metric-label">Full Training Cycle</div>
                 </div>
                 <div class="metric-card">
@@ -184,17 +185,29 @@
                     <div class="metric-label">Parallel Models</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">$0.22</div>
-                    <div class="metric-label">Inference Cost</div>
+                    <div class="metric-value">70%</div>
+                    <div class="metric-label">Cost Reduction</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-value">825+</div>
                     <div class="metric-label">Engineered Features</div>
                 </div>
+                <div class="metric-card">
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Lambda Functions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">7</div>
+                    <div class="metric-label">Execution Modes</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$0.22</div>
+                    <div class="metric-label">Inference Cost</div>
+                </div>
             </div>
             <p style="margin-top: 2rem;">
-                <strong>Impact:</strong> Transformed a 30-day sequential training process into a 12-hour parallel operation
-                while reducing infrastructure costs from ~$750/cycle to ~$225/cycle using AWS Batch spot instances.
+                <strong>Impact:</strong> Transformed a 30-day sequential training process into a ~48-hour parallel operation
+                while reducing infrastructure costs by ~70% using AWS Batch spot instances, with full orchestration via Step Functions.
             </p>
         </section>
 
@@ -220,7 +233,7 @@
                 <ul style="margin-left: 2rem; line-height: 1.8; margin-bottom: 0;">
                     <li><strong>Scalability:</strong> Train 18 independent models in parallel across multiple horizons</li>
                     <li><strong>Automation:</strong> End-to-end deployment without manual intervention</li>
-                    <li><strong>Reliability:</strong> Graceful error handling, comprehensive logging, checkpoint recovery</li>
+                    <li><strong>Reliability:</strong> Graceful error handling, comprehensive logging, retry logic with exponential backoff</li>
                     <li><strong>Cost Efficiency:</strong> Optimize for AWS compute costs using spot instances</li>
                     <li><strong>Maintainability:</strong> Clean architecture, configuration-driven design with type validation</li>
                     <li><strong>Reproducibility:</strong> Version-controlled configs and containerization for consistent environments</li>
@@ -239,44 +252,41 @@
             <div class="architecture-diagram">
                 <h4 style="margin-bottom: 1rem;">Pipeline Architecture</h4>
                 <pre style="font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; margin: 0;">
-┌─────────────────────────┐
-│   Developer Machine     │
-│  submit_batch_training  │
-└───────────┬─────────────┘
-            │ Uploads configs to S3
-            │ Submits AWS Batch Job
-            ▼
-┌───────────────────────────────────────┐
-│         AWS Batch Array Job           │
-│  ┌────────┐  ┌────────┐  ┌────────┐  │
-│  │  Tm1   │  │  Tm2   │  │ Tm18   │  │ ← 18 parallel tasks
-│  └────────┘  └────────┘  └────────┘  │
-│   (c6i.4xlarge: 16 vCPU, 32GB RAM)   │
-└───────────────┬───────────────────────┘
-                │
-                ├─ Downloads data from S3 (~3GB)
-                ├─ Trains XGBoost models:
-                │    • Stage 1: Classifier (zero/non-zero)
-                │    • Stage 2: Regressor (sales amount)
-                ├─ Bayesian hyperparameter optimization (50 iter)
-                ├─ Generates HTML evaluation reports
-                └─ Uploads artifacts to S3
-                ▼
-┌─────────────────────────────────────┐
-│  S3: Model Artifacts Repository     │
-│  - Models (18 horizons × 2 stages)  │
-│  - HTML Reports & Metrics           │
-│  - Configuration Snapshots          │
-│  - Prediction CSVs                  │
-└─────────────────────────────────────┘
-                │
-                ▼
-┌─────────────────────────────────────┐
-│    CloudWatch Logs & Monitoring     │
-│  - Real-time job progress           │
-│  - Error tracking & alerts          │
-│  - Cost tracking per job            │
-└─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│            AWS Step Functions Orchestration          │
+│         (7 execution modes, SNS notifications)      │
+└──────────┬──────────────┬──────────────┬────────────┘
+           │              │              │
+           ▼              ▼              ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Feature  │   │ Model    │   │Inference │
+    │   Eng.   │   │ Training │   │ Pipeline │
+    └────┬─────┘   └────┬─────┘   └────┬─────┘
+         │              │              │
+         ▼              ▼              ▼
+    ┌──────────┐   ┌──────────┐   ┌──────────┐
+    │ Lambda:  │   │ Lambda:  │   │ Lambda:  │
+    │ValidateFE│   │Aggregate │   │Validate  │
+    │  Output  │   │ Results  │   │ Output   │
+    └──────────┘   └──────────┘   └──────────┘
+         │              │              │
+         ▼              ▼              ▼
+    ┌─────────────────────────────────────────┐
+    │  AWS Batch (Spot Instances, ~70% savings)│
+    │  ┌──────┐ ┌──────┐ ┌──────┐            │
+    │  │ Tm1  │ │ Tm2  │ │ Tm18 │  ← 18     │
+    │  └──────┘ └──────┘ └──────┘  parallel  │
+    │  4xlarge instances: 16 vCPU, 32-64GB   │
+    └──────────────────┬──────────────────────┘
+                       │
+    ┌──────────────────▼──────────────────────┐
+    │         S3: Artifacts Repository         │
+    │  Models │ Metrics │ Reports │ Configs    │
+    └──────────────────┬──────────────────────┘
+                       │
+    ┌──────────────────▼──────────────────────┐
+    │      CloudWatch + SNS Notifications      │
+    └─────────────────────────────────────────┘
                 </pre>
             </div>
 
@@ -286,21 +296,21 @@
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. AWS Batch Array Jobs</h4>
                 <p><strong>Rationale:</strong> Native parallel processing without manual orchestration</p>
                 <p><strong>Implementation:</strong> 1 parent job spawns 18 child tasks, each training 1 horizon</p>
-                <p><strong>Impact:</strong> 30 days → 12 hours (limited by longest-running task)</p>
+                <p><strong>Impact:</strong> 30 days → ~18 hours (FE ~6h, Training ~12h, Inference ~10min)</p>
             </div>
 
             <div style="margin-bottom: 2rem;">
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">2. Spot Instance Strategy</h4>
-                <p><strong>Rationale:</strong> 60-70% cost savings for interruptible workloads</p>
-                <p><strong>Strategy:</strong> Checkpoint model training every 10 iterations, resume on interruption</p>
-                <p><strong>Impact:</strong> ~$750/cycle → ~$225/cycle (with <5% interruption rate)</p>
+                <p><strong>Rationale:</strong> 60-70% cost savings for fault-tolerant ML workloads</p>
+                <p><strong>Strategy:</strong> SPOT_CAPACITY_OPTIMIZED allocation across multiple instance families (m6i, c6i, m6a, c6a, r6i). Each horizon trains independently, so a single interruption only affects one model.</p>
+                <p><strong>Impact:</strong> ~70% cost reduction per training cycle</p>
             </div>
 
             <div style="margin-bottom: 2rem;">
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">3. Docker Containerization</h4>
                 <p><strong>Rationale:</strong> Reproducible environments across dev/production</p>
-                <p><strong>Optimization:</strong> Base image <code>mambaorg/micromamba:1.5</code> for 60% faster dependency resolution</p>
-                <p><strong>Impact:</strong> 1.8GB final image with all ML dependencies, cached for instant deployment</p>
+                <p><strong>Optimization:</strong> Base image <code>condaforge/mambaforge</code> with Python 3.11, CPU thread pinning (OMP/MKL/OpenBLAS), mamba clean for layer size reduction</p>
+                <p><strong>Impact:</strong> Unified entrypoint — single image handles training AND inference via JOB_TYPE environment variable</p>
             </div>
 
             <div style="margin-bottom: 2rem;">
@@ -310,21 +320,57 @@
                 <p><strong>Impact:</strong> Zero config-related failures in 50+ production runs</p>
             </div>
 
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">5. Step Functions Orchestration</h4>
+                <p><strong>Rationale:</strong> Flexible multi-stage pipeline with built-in error handling</p>
+                <p><strong>Implementation:</strong> 18-state machine supporting 7 execution modes (FE-only, Training-only, Inference-only, or any combination)</p>
+                <p><strong>Impact:</strong> Map states for parallel Batch jobs, SNS notifications, Lambda-based validation between stages, exponential backoff retries</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">6. Terraform Infrastructure as Code</h4>
+                <p><strong>Rationale:</strong> Reproducible, version-controlled infrastructure</p>
+                <p><strong>Implementation:</strong> 8 modules managing 40+ AWS resources (Batch, Lambda, Step Functions, S3, ECR, IAM, CloudWatch, SNS)</p>
+                <p><strong>Impact:</strong> Full infrastructure provisioned in a single <code>terraform apply</code></p>
+            </div>
+
             <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Modular Architecture</h3>
-            <div class="code-block"><pre style="margin: 0; font-family: inherit; font-size: inherit;"><span style="color: #608b4e;"># Core modules (src/ directory)</span>
-src/
-├── config_schema.py       <span style="color: #608b4e;"># Pydantic validation for type safety</span>
-├── data_loader.py         <span style="color: #608b4e;"># S3/local abstraction with retry logic</span>
-├── model_trainer.py       <span style="color: #608b4e;"># XGBoost training + Bayesian optimization</span>
-├── evaluator.py           <span style="color: #608b4e;"># Metrics collection (classification + regression)</span>
-├── visualizer.py          <span style="color: #608b4e;"># HTML report generation (8+ plot types)</span>
-├── io_utils.py            <span style="color: #608b4e;"># S3 operations with exponential backoff</span>
-└── logger.py              <span style="color: #608b4e;"># Dual logging (console + CloudWatch)</span>
+            <div class="code-block"><pre style="margin: 0; font-family: inherit; font-size: inherit;"><span style="color: #608b4e;"># Serverless (lambda/)</span>
+lambda/
+├── anaplan-download/           <span style="color: #608b4e;"># OAuth2 API data sourcing</span>
+├── validate-download/          <span style="color: #608b4e;"># File validation</span>
+├── parse-input/                <span style="color: #608b4e;"># Step Functions input parsing</span>
+├── prepare-training-config/    <span style="color: #608b4e;"># Dynamic per-horizon YAML generation</span>
+├── aggregate-training-results/ <span style="color: #608b4e;"># Model registration &amp; validation</span>
+├── prepare-inference-config/   <span style="color: #608b4e;"># Inference config generation</span>
+├── validate-fe-output/         <span style="color: #608b4e;"># Feature engineering validation</span>
+└── validate-inference-output/  <span style="color: #608b4e;"># Prediction output validation</span>
+
+<span style="color: #608b4e;"># Infrastructure (terraform/)</span>
+terraform/modules/
+├── batch/          <span style="color: #608b4e;"># Compute environments, job queues, definitions</span>
+├── stepfunctions/  <span style="color: #608b4e;"># State machine (18 states, 7 modes)</span>
+├── lambda/         <span style="color: #608b4e;"># 8 Lambda functions</span>
+├── s3/             <span style="color: #608b4e;"># Storage buckets</span>
+├── ecr/            <span style="color: #608b4e;"># Container registries</span>
+├── iam/            <span style="color: #608b4e;"># Roles &amp; policies</span>
+├── cloudwatch/     <span style="color: #608b4e;"># Monitoring &amp; alarms</span>
+└── secrets/        <span style="color: #608b4e;"># Secrets Manager</span>
+
+<span style="color: #608b4e;"># ML Pipeline (ml/src/)</span>
+ml/src/
+├── config_schema.py    <span style="color: #608b4e;"># Pydantic validation for type safety</span>
+├── data_loader.py      <span style="color: #608b4e;"># S3/local abstraction with retry logic</span>
+├── model_trainer.py    <span style="color: #608b4e;"># XGBoost + Bayesian optimization (50 iter)</span>
+├── evaluator.py        <span style="color: #608b4e;"># Classification + regression metrics</span>
+├── visualizer.py       <span style="color: #608b4e;"># HTML reports (8+ plot types)</span>
+├── io_utils.py         <span style="color: #608b4e;"># S3 with exponential backoff</span>
+└── logger.py           <span style="color: #608b4e;"># Console + CloudWatch dual logging</span>
 
 <span style="color: #608b4e;"># Entry points</span>
-training.py                <span style="color: #608b4e;"># Local single-horizon training</span>
-inference.py               <span style="color: #608b4e;"># Multi-horizon prediction pipeline</span>
-batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestration layer</span></pre>
+training.py             <span style="color: #608b4e;"># Single-horizon training</span>
+inference.py            <span style="color: #608b4e;"># Multi-horizon prediction (wide-format CSV)</span>
+batch_wrapper.py        <span style="color: #608b4e;"># Unified Docker entrypoint (training/inference)</span></pre>
             </div>
         </section>
 
@@ -347,14 +393,14 @@ batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestrati
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Time</td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">30 days</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>12 hours</strong></td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">60x faster</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>~18 hours</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~40x faster</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Cost/Cycle</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~$750</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>~$225</strong></td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">70% reduction</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">On-demand pricing</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>Spot instances</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~70% reduction</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Inference Cost</td>
@@ -401,10 +447,10 @@ batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestrati
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #FF9900;">
-                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Zero Downtime</h4>
+                    <h4 style="color: #FF9900; margin-bottom: 0.5rem;">Fault Tolerance</h4>
                     <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                        Spot interruptions handled gracefully with checkpoint recovery.
-                        Model training resumes from last saved state
+                        Each horizon trains independently — a spot interruption only affects one model.
+                        Built-in retry logic with exponential backoff via Step Functions
                     </p>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); border-left: 4px solid #FF9900;">
@@ -448,28 +494,28 @@ batch_wrapper.py           <span style="color: #608b4e;"># AWS Batch orchestrati
                 <div>
                     <h4 style="color: #FF9900; margin-bottom: 1rem;">Cloud Architecture</h4>
                     <ul style="line-height: 1.8;">
-                        <li>AWS Batch array job orchestration</li>
-                        <li>S3 lifecycle management</li>
-                        <li>CloudWatch monitoring integration</li>
-                        <li>Spot instance cost optimization</li>
+                        <li>AWS Step Functions orchestration (18 states, 7 modes)</li>
+                        <li>AWS Batch parallel job execution</li>
+                        <li>8 Lambda functions for pipeline logic</li>
+                        <li>Spot instance cost optimization (~70% savings)</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 style="color: #FF9900; margin-bottom: 1rem;">MLOps</h4>
+                    <h4 style="color: #FF9900; margin-bottom: 1rem;">Infrastructure & MLOps</h4>
                     <ul style="line-height: 1.8;">
-                        <li>Docker containerization</li>
-                        <li>Configuration-driven pipelines</li>
-                        <li>Automated model versioning</li>
-                        <li>Comprehensive evaluation reporting</li>
+                        <li>Terraform IaC (8 modules, 40+ resources)</li>
+                        <li>Docker containerization (unified entrypoint)</li>
+                        <li>Anaplan API integration (OAuth2)</li>
+                        <li>SNS notifications, CloudWatch monitoring</li>
                     </ul>
                 </div>
                 <div>
                     <h4 style="color: #FF9900; margin-bottom: 1rem;">Machine Learning</h4>
                     <ul style="line-height: 1.8;">
-                        <li>XGBoost for time-series</li>
-                        <li>Bayesian hyperparameter tuning</li>
+                        <li>XGBoost for time-series forecasting</li>
+                        <li>Bayesian hyperparameter tuning (50 iterations)</li>
                         <li>Zero-inflated data handling</li>
-                        <li>Feature engineering (825+ features)</li>
+                        <li>Feature engineering (825+ features, tsfresh)</li>
                     </ul>
                 </div>
             </div>
