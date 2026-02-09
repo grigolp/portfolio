@@ -128,7 +128,7 @@
             <h1 style="font-size: 3rem; margin-bottom: 1rem;">Enterprise ML Pipeline with AWS Batch</h1>
             <p style="font-size: 1.25rem; opacity: 0.95; max-width: 800px;">
                 Production-ready multi-horizon sales forecasting pipeline orchestrated end-to-end with AWS Step Functions
-                and parallelized across AWS Batch, achieving ~40x training speedup and ~70% cost reduction using spot instances
+                and parallelized across AWS Batch, achieving ~45x training speedup and ~70% cost reduction using spot instances
             </p>
             <div class="tech-stack">
                 <span class="tech-badge">AWS Step Functions</span>
@@ -169,15 +169,15 @@
             <p class="lead">
                 Designed and deployed a production-ready machine learning pipeline for multi-horizon sales forecasting,
                 orchestrated end-to-end with AWS Step Functions and parallelized across AWS Batch. The system processes
-                data from Anaplan through feature engineering, model training, and inference — supporting 7 flexible execution modes.
+                data through feature engineering, model training, and inference — supporting 7 flexible execution modes.
             </p>
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value">~40x</div>
+                    <div class="metric-value">~45x</div>
                     <div class="metric-label">Training Speedup</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">~18h</div>
+                    <div class="metric-value">~16h</div>
                     <div class="metric-label">Full Training Cycle</div>
                 </div>
                 <div class="metric-card">
@@ -206,7 +206,7 @@
                 </div>
             </div>
             <p style="margin-top: 2rem;">
-                <strong>Impact:</strong> Transformed a 30-day sequential training process into a ~48-hour parallel operation
+                <strong>Impact:</strong> Transformed a 30-day sequential training process into a ~16-hour parallel operation
                 while reducing infrastructure costs by ~70% using AWS Batch spot instances, with full orchestration via Step Functions.
             </p>
         </section>
@@ -249,54 +249,13 @@
                 Implemented a classifier + regressor architecture to handle zero-inflated sales data:
             </p>
 
-            <div class="architecture-diagram">
-                <h4 style="margin-bottom: 1rem;">Pipeline Architecture</h4>
-                <pre style="font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; margin: 0;">
-┌─────────────────────────────────────────────────────┐
-│            AWS Step Functions Orchestration          │
-│         (7 execution modes, SNS notifications)      │
-└──────────┬──────────────┬──────────────┬────────────┘
-           │              │              │
-           ▼              ▼              ▼
-    ┌──────────┐   ┌──────────┐   ┌──────────┐
-    │ Feature  │   │ Model    │   │Inference │
-    │   Eng.   │   │ Training │   │ Pipeline │
-    └────┬─────┘   └────┬─────┘   └────┬─────┘
-         │              │              │
-         ▼              ▼              ▼
-    ┌──────────┐   ┌──────────┐   ┌──────────┐
-    │ Lambda:  │   │ Lambda:  │   │ Lambda:  │
-    │ValidateFE│   │Aggregate │   │Validate  │
-    │  Output  │   │ Results  │   │ Output   │
-    └──────────┘   └──────────┘   └──────────┘
-         │              │              │
-         ▼              ▼              ▼
-    ┌─────────────────────────────────────────┐
-    │  AWS Batch (Spot Instances, ~70% savings)│
-    │  ┌──────┐ ┌──────┐ ┌──────┐            │
-    │  │ Tm1  │ │ Tm2  │ │ Tm18 │  ← 18     │
-    │  └──────┘ └──────┘ └──────┘  parallel  │
-    │  4xlarge instances: 16 vCPU, 32-64GB   │
-    └──────────────────┬──────────────────────┘
-                       │
-    ┌──────────────────▼──────────────────────┐
-    │         S3: Artifacts Repository         │
-    │  Models │ Metrics │ Reports │ Configs    │
-    └──────────────────┬──────────────────────┘
-                       │
-    ┌──────────────────▼──────────────────────┐
-    │      CloudWatch + SNS Notifications      │
-    └─────────────────────────────────────────┘
-                </pre>
-            </div>
-
             <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Key Design Decisions</h3>
 
             <div style="margin-bottom: 2rem;">
                 <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">1. AWS Batch Array Jobs</h4>
                 <p><strong>Rationale:</strong> Native parallel processing without manual orchestration</p>
                 <p><strong>Implementation:</strong> 1 parent job spawns 18 child tasks, each training 1 horizon</p>
-                <p><strong>Impact:</strong> 30 days → ~18 hours (FE ~6h, Training ~12h, Inference ~10min)</p>
+                <p><strong>Impact:</strong> 30 days → ~16 hours</p>
             </div>
 
             <div style="margin-bottom: 2rem;">
@@ -334,44 +293,6 @@
                 <p><strong>Impact:</strong> Full infrastructure provisioned in a single <code>terraform apply</code></p>
             </div>
 
-            <h3 style="font-size: 1.75rem; margin: 2rem 0 1rem;">Modular Architecture</h3>
-            <div class="code-block"><pre style="margin: 0; font-family: inherit; font-size: inherit;"><span style="color: #608b4e;"># Serverless (lambda/)</span>
-lambda/
-├── anaplan-download/           <span style="color: #608b4e;"># OAuth2 API data sourcing</span>
-├── validate-download/          <span style="color: #608b4e;"># File validation</span>
-├── parse-input/                <span style="color: #608b4e;"># Step Functions input parsing</span>
-├── prepare-training-config/    <span style="color: #608b4e;"># Dynamic per-horizon YAML generation</span>
-├── aggregate-training-results/ <span style="color: #608b4e;"># Model registration &amp; validation</span>
-├── prepare-inference-config/   <span style="color: #608b4e;"># Inference config generation</span>
-├── validate-fe-output/         <span style="color: #608b4e;"># Feature engineering validation</span>
-└── validate-inference-output/  <span style="color: #608b4e;"># Prediction output validation</span>
-
-<span style="color: #608b4e;"># Infrastructure (terraform/)</span>
-terraform/modules/
-├── batch/          <span style="color: #608b4e;"># Compute environments, job queues, definitions</span>
-├── stepfunctions/  <span style="color: #608b4e;"># State machine (18 states, 7 modes)</span>
-├── lambda/         <span style="color: #608b4e;"># 8 Lambda functions</span>
-├── s3/             <span style="color: #608b4e;"># Storage buckets</span>
-├── ecr/            <span style="color: #608b4e;"># Container registries</span>
-├── iam/            <span style="color: #608b4e;"># Roles &amp; policies</span>
-├── cloudwatch/     <span style="color: #608b4e;"># Monitoring &amp; alarms</span>
-└── secrets/        <span style="color: #608b4e;"># Secrets Manager</span>
-
-<span style="color: #608b4e;"># ML Pipeline (ml/src/)</span>
-ml/src/
-├── config_schema.py    <span style="color: #608b4e;"># Pydantic validation for type safety</span>
-├── data_loader.py      <span style="color: #608b4e;"># S3/local abstraction with retry logic</span>
-├── model_trainer.py    <span style="color: #608b4e;"># XGBoost + Bayesian optimization (50 iter)</span>
-├── evaluator.py        <span style="color: #608b4e;"># Classification + regression metrics</span>
-├── visualizer.py       <span style="color: #608b4e;"># HTML reports (8+ plot types)</span>
-├── io_utils.py         <span style="color: #608b4e;"># S3 with exponential backoff</span>
-└── logger.py           <span style="color: #608b4e;"># Console + CloudWatch dual logging</span>
-
-<span style="color: #608b4e;"># Entry points</span>
-training.py             <span style="color: #608b4e;"># Single-horizon training</span>
-inference.py            <span style="color: #608b4e;"># Multi-horizon prediction (wide-format CSV)</span>
-batch_wrapper.py        <span style="color: #608b4e;"># Unified Docker entrypoint (training/inference)</span></pre>
-            </div>
         </section>
 
         <!-- Results & Impact -->
@@ -393,8 +314,8 @@ batch_wrapper.py        <span style="color: #608b4e;"># Unified Docker entrypoin
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Time</td>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">30 days</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>~18 hours</strong></td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~40x faster</td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);"><strong>~16 hours</strong></td>
+                            <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">~45x faster</td>
                         </tr>
                         <tr>
                             <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">Training Cost/Cycle</td>
@@ -505,7 +426,7 @@ batch_wrapper.py        <span style="color: #608b4e;"># Unified Docker entrypoin
                     <ul style="line-height: 1.8;">
                         <li>Terraform IaC (8 modules, 40+ resources)</li>
                         <li>Docker containerization (unified entrypoint)</li>
-                        <li>Anaplan API integration (OAuth2)</li>
+                        <li>Third-party API integration (OAuth2)</li>
                         <li>SNS notifications, CloudWatch monitoring</li>
                     </ul>
                 </div>
