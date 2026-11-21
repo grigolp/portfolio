@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Security Specialty">
+  <path d="M60 8 L104 26 V58 C104 86 84 104 60 112 C36 104 16 86 16 58 V26 Z" fill="#232f3e"/>
+  <path d="M60 18 L95 32 V58 C95 80 79 95 60 102 C41 95 25 80 25 58 V32 Z" fill="none" stroke="#ff9900" stroke-width="3"/>
+  <rect x="45" y="52" width="30" height="24" rx="4" fill="#ff9900"/>
+  <path d="M51 52 V45 a9 9 0 0 1 18 0 V52" fill="none" stroke="#ff9900" stroke-width="4"/>
+  <text x="60" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff">SECURITY</text>
+</svg>
